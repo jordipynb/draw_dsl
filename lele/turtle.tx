@@ -1,0 +1,81 @@
+Scene:
+	shapes*=Shape
+	draw_instructions*=DrawInstruction
+;
+
+Shape:
+	'shape' name=MyID
+		pencil=PencilColor?
+		fill=FillColor?
+		axiom=Axiom
+		rule*=Rule
+		depth=Level?
+;
+
+Axiom:
+	'axiom' '{' 
+		instruction+=Instruction 
+	'}'
+;
+
+Rule:
+	'rule' name=MyID '{'
+		base=Base
+		instruction+=Instruction
+		iter=Loop?
+	'}'
+;
+
+Base:
+	'base'':' instruction=InstructionBase | 'base''{' instruction+=InstructionBase '}'
+;
+
+Instruction:
+	key='left' angle=Angle      | key='right' angle=Angle         | 
+	key='line' distance=INT     | key='jump' x=INT y=INT          | 
+	key='call_rule' rule=[Rule] | key='call_shape' shape=[Shape]
+;
+
+InstructionBase:
+	key='left' angle=Angle      | key='right' angle=Angle         | 
+	key='line' distance=INT     | key='jump' x=INT y=INT          | key='nill'
+;
+
+PencilColor:
+	'pencil' color=Color
+;
+
+FillColor:
+	'fill' color=Color
+;
+
+Level:
+	'depth' level=INT
+;
+
+Loop:
+	'iter' loop=INT
+;
+
+Angle:
+	FLOAT
+;
+
+Color:
+	'red' | 'green' | 'blue' | 'yellow' | 'magenta' | /#[0-9a-f]{6}/
+;
+
+DrawInstruction:
+	'draw' shape=[Shape] position=Position?
+;
+
+Position:
+	x=INT ',' y=INT
+;
+
+Comment:
+    /\/\*(.|\n)*?\*\// | /\/\/.*?$/
+;
+
+Keyword: 'shape' | 'axiom' | 'rule' | 'base' | 'left' | 'right' | 'jump' | 'line' | 'nill' | 'call_shape' | 'call_rule';
+MyID: !Keyword ID;
