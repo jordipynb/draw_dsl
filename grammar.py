@@ -1,21 +1,12 @@
 from lexer import *
 from ply import yacc as yacc
+from utils import *
 
 # Definición de la gramática
 def p_scene(t):
 	'''scene    : draws_instruction scene
 	            | draws_instruction
 				| shapes'''
-	if len(t) == 3:
-		shapes = t[2][0] 
-		for shape in shapes:
-			if shape.name in t[1][0]:
-				raise SyntaxError(f"{shape.name} no es figura unica")
-		t[2][0].union(t[1][0])
-		t[0] = t[2].insert(0, t[1])
-	else:
-		t[0] = [t[1]]
-
 
 def p_draws_instruction(t):
 	'''draws_instruction : shapes draws'''
@@ -32,7 +23,7 @@ def p_draw(t):
 	'''draw : DRAW ID INT COMMA INT'''
 
 def p_shape(t):
-	'''shape : SHAPE ID pencil'''
+	'''shape : SHAPE ID O_KEY pencil'''
 
 	
 def p_pencil(t):
@@ -89,12 +80,31 @@ def p_instructions_base(t):
 	'''instructions_base : instruction_base instructions_base
 				    	 | instruction_base '''
 
-def p_depth(t):
-	'''depth  : DEPTH INT'''
-
 def p_loops(t):
 	'''loops  : ITER INT C_KEY
 			  | C_KEY'''
+	if len(t)==2:
+		t[0] = 0
+	else:
+		if t[2] < 0:
+			print(f'Semantic error: "{t.slice[2].value}" en la línea {t.slice[2].lineno} debe ser mayor o igual que cero!')
+		t[0] = t[2]
 
-def p_error(t):
-    raise SyntaxError(f'WARNING!!! Syntax Error "{t.value}" en la línea {t.lineno}')
+def p_depth(t):
+	'''depth  : DEPTH INT C_KEY
+	          | C_KEY'''
+	if len(t)==2:
+		t[0] = 0
+	else:
+		if t[2] < 0:
+			print(f'Semantic error: "{t.slice[2].value}" en la línea {t.slice[2].lineno} debe ser mayor o igual que cero!')
+			return
+		t[0] = t[2]
+
+
+def p_error(p):
+    if p == None:
+        token = "EOF"
+    else:
+        token = f"'{p.value}' en la línea {p.lineno}"
+    print(f"Syntax error: No se esperaba {token}")

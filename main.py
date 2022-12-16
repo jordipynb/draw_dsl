@@ -1,6 +1,6 @@
 from grammar import*
 
-input = '''shape triangle
+input = '''shape triangle {
 	pencil red
 	fill yellow
 	axiom { 
@@ -16,10 +16,10 @@ input = '''shape triangle
 	rule first {
 		base: nill
 		line 300
-		iter 0
 	}
 	depth 5 
-shape triangle
+}
+shape triangle {
 	pencil red
 	fill yellow
 	axiom { 
@@ -37,14 +37,14 @@ shape triangle
 		line 300
 	}
 	depth 5
-
+}
 draw triangle 1 , 1'''
 
 # Give the lexer some input
 # Build the lexer
 # lexer = lex.lex(optimize=1)
 lexer = lex.lex()
-lexer.input(input)
+#lexer.input(input)
  
 # Tokenize
 # while True:
