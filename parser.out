@@ -1,0 +1,1288 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> scene
+Rule 1     scene -> draws_instruction scene
+Rule 2     scene -> draws_instruction
+Rule 3     scene -> shapes
+Rule 4     draws_instruction -> shapes draws
+Rule 5     shapes -> shape shapes
+Rule 6     shapes -> shape
+Rule 7     draws -> draw draws
+Rule 8     draws -> draw
+Rule 9     draw -> DRAW ID INT COMMA INT
+Rule 10    draw -> DRAW ID
+Rule 11    draw -> DRAW NILL
+Rule 12    shape -> SHAPE ID O_KEY pencil
+Rule 13    pencil -> PENCIL ID fill
+Rule 14    pencil -> fill
+Rule 15    fill -> FILL ID axiom
+Rule 16    fill -> axiom
+Rule 17    axiom -> AXIOM O_KEY instructions C_KEY rules
+Rule 18    rules -> rule rules
+Rule 19    rules -> depth
+Rule 20    rule -> RULE ID O_KEY base instructions loops
+Rule 21    base -> BASE TWO_POINT instruction_base
+Rule 22    base -> BASE O_KEY instructions_base C_KEY
+Rule 23    instructions -> instruction instructions
+Rule 24    instructions -> instruction
+Rule 25    instruction -> LEFT INT
+Rule 26    instruction -> LEFT FLOAT
+Rule 27    instruction -> RIGHT INT
+Rule 28    instruction -> RIGHT FLOAT
+Rule 29    instruction -> LINE INT
+Rule 30    instruction -> JUMP INT COMMA INT
+Rule 31    instruction -> NILL
+Rule 32    instruction -> PUSH INT COMMA INT
+Rule 33    instruction -> POP
+Rule 34    instruction -> CALL_RULE ID
+Rule 35    instruction -> CALL_SHAPE ID
+Rule 36    instruction_base -> LEFT INT
+Rule 37    instruction_base -> LEFT FLOAT
+Rule 38    instruction_base -> RIGHT INT
+Rule 39    instruction_base -> RIGHT FLOAT
+Rule 40    instruction_base -> LINE INT
+Rule 41    instruction_base -> JUMP INT COMMA INT
+Rule 42    instruction_base -> NILL
+Rule 43    instruction_base -> PUSH INT COMMA INT
+Rule 44    instruction_base -> POP
+Rule 45    instructions_base -> instruction_base instructions_base
+Rule 46    instructions_base -> instruction_base
+Rule 47    loops -> ITER INT C_KEY
+Rule 48    loops -> C_KEY
+Rule 49    depth -> DEPTH INT C_KEY
+Rule 50    depth -> C_KEY
+
+Terminals, with rules where they appear
+
+AXIOM                : 17
+BASE                 : 21 22
+CALL_RULE            : 34
+CALL_SHAPE           : 35
+COMMA                : 9 30 32 41 43
+C_KEY                : 17 22 47 48 49 50
+DEPTH                : 49
+DRAW                 : 9 10 11
+FILL                 : 15
+FLOAT                : 26 28 37 39
+ID                   : 9 10 12 13 15 20 34 35
+INT                  : 9 9 25 27 29 30 30 32 32 36 38 40 41 41 43 43 47 49
+ITER                 : 47
+JUMP                 : 30 41
+LEFT                 : 25 26 36 37
+LINE                 : 29 40
+NILL                 : 11 31 42
+O_KEY                : 12 17 20 22
+PENCIL               : 13
+POP                  : 33 44
+PUSH                 : 32 43
+RIGHT                : 27 28 38 39
+RULE                 : 20
+SHAPE                : 12
+TWO_POINT            : 21
+error                : 
+
+Nonterminals, with rules where they appear
+
+axiom                : 15 16
+base                 : 20
+depth                : 19
+draw                 : 7 8
+draws                : 4 7
+draws_instruction    : 1 2
+fill                 : 13 14
+instruction          : 23 24
+instruction_base     : 21 45 46
+instructions         : 17 20 23
+instructions_base    : 22 45
+loops                : 20
+pencil               : 12
+rule                 : 18
+rules                : 17 18
+scene                : 1 0
+shape                : 5 6
+shapes               : 3 4 5
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . scene
+    (1) scene -> . draws_instruction scene
+    (2) scene -> . draws_instruction
+    (3) scene -> . shapes
+    (4) draws_instruction -> . shapes draws
+    (5) shapes -> . shape shapes
+    (6) shapes -> . shape
+    (12) shape -> . SHAPE ID O_KEY pencil
+
+    SHAPE           shift and go to state 5
+
+    scene                          shift and go to state 1
+    draws_instruction              shift and go to state 2
+    shapes                         shift and go to state 3
+    shape                          shift and go to state 4
+
+state 1
+
+    (0) S' -> scene .
+
+
+
+state 2
+
+    (1) scene -> draws_instruction . scene
+    (2) scene -> draws_instruction .
+    (1) scene -> . draws_instruction scene
+    (2) scene -> . draws_instruction
+    (3) scene -> . shapes
+    (4) draws_instruction -> . shapes draws
+    (5) shapes -> . shape shapes
+    (6) shapes -> . shape
+    (12) shape -> . SHAPE ID O_KEY pencil
+
+    $end            reduce using rule 2 (scene -> draws_instruction .)
+    SHAPE           shift and go to state 5
+
+    draws_instruction              shift and go to state 2
+    scene                          shift and go to state 6
+    shapes                         shift and go to state 3
+    shape                          shift and go to state 4
+
+state 3
+
+    (3) scene -> shapes .
+    (4) draws_instruction -> shapes . draws
+    (7) draws -> . draw draws
+    (8) draws -> . draw
+    (9) draw -> . DRAW ID INT COMMA INT
+    (10) draw -> . DRAW ID
+    (11) draw -> . DRAW NILL
+
+    $end            reduce using rule 3 (scene -> shapes .)
+    DRAW            shift and go to state 9
+
+    draws                          shift and go to state 7
+    draw                           shift and go to state 8
+
+state 4
+
+    (5) shapes -> shape . shapes
+    (6) shapes -> shape .
+    (5) shapes -> . shape shapes
+    (6) shapes -> . shape
+    (12) shape -> . SHAPE ID O_KEY pencil
+
+    DRAW            reduce using rule 6 (shapes -> shape .)
+    $end            reduce using rule 6 (shapes -> shape .)
+    SHAPE           shift and go to state 5
+
+    shape                          shift and go to state 4
+    shapes                         shift and go to state 10
+
+state 5
+
+    (12) shape -> SHAPE . ID O_KEY pencil
+
+    ID              shift and go to state 11
+
+
+state 6
+
+    (1) scene -> draws_instruction scene .
+
+    $end            reduce using rule 1 (scene -> draws_instruction scene .)
+
+
+state 7
+
+    (4) draws_instruction -> shapes draws .
+
+    SHAPE           reduce using rule 4 (draws_instruction -> shapes draws .)
+    $end            reduce using rule 4 (draws_instruction -> shapes draws .)
+
+
+state 8
+
+    (7) draws -> draw . draws
+    (8) draws -> draw .
+    (7) draws -> . draw draws
+    (8) draws -> . draw
+    (9) draw -> . DRAW ID INT COMMA INT
+    (10) draw -> . DRAW ID
+    (11) draw -> . DRAW NILL
+
+    SHAPE           reduce using rule 8 (draws -> draw .)
+    $end            reduce using rule 8 (draws -> draw .)
+    DRAW            shift and go to state 9
+
+    draw                           shift and go to state 8
+    draws                          shift and go to state 12
+
+state 9
+
+    (9) draw -> DRAW . ID INT COMMA INT
+    (10) draw -> DRAW . ID
+    (11) draw -> DRAW . NILL
+
+    ID              shift and go to state 13
+    NILL            shift and go to state 14
+
+
+state 10
+
+    (5) shapes -> shape shapes .
+
+    DRAW            reduce using rule 5 (shapes -> shape shapes .)
+    $end            reduce using rule 5 (shapes -> shape shapes .)
+
+
+state 11
+
+    (12) shape -> SHAPE ID . O_KEY pencil
+
+    O_KEY           shift and go to state 15
+
+
+state 12
+
+    (7) draws -> draw draws .
+
+    SHAPE           reduce using rule 7 (draws -> draw draws .)
+    $end            reduce using rule 7 (draws -> draw draws .)
+
+
+state 13
+
+    (9) draw -> DRAW ID . INT COMMA INT
+    (10) draw -> DRAW ID .
+
+    INT             shift and go to state 16
+    DRAW            reduce using rule 10 (draw -> DRAW ID .)
+    SHAPE           reduce using rule 10 (draw -> DRAW ID .)
+    $end            reduce using rule 10 (draw -> DRAW ID .)
+
+
+state 14
+
+    (11) draw -> DRAW NILL .
+
+    DRAW            reduce using rule 11 (draw -> DRAW NILL .)
+    SHAPE           reduce using rule 11 (draw -> DRAW NILL .)
+    $end            reduce using rule 11 (draw -> DRAW NILL .)
+
+
+state 15
+
+    (12) shape -> SHAPE ID O_KEY . pencil
+    (13) pencil -> . PENCIL ID fill
+    (14) pencil -> . fill
+    (15) fill -> . FILL ID axiom
+    (16) fill -> . axiom
+    (17) axiom -> . AXIOM O_KEY instructions C_KEY rules
+
+    PENCIL          shift and go to state 18
+    FILL            shift and go to state 20
+    AXIOM           shift and go to state 22
+
+    pencil                         shift and go to state 17
+    fill                           shift and go to state 19
+    axiom                          shift and go to state 21
+
+state 16
+
+    (9) draw -> DRAW ID INT . COMMA INT
+
+    COMMA           shift and go to state 23
+
+
+state 17
+
+    (12) shape -> SHAPE ID O_KEY pencil .
+
+    SHAPE           reduce using rule 12 (shape -> SHAPE ID O_KEY pencil .)
+    DRAW            reduce using rule 12 (shape -> SHAPE ID O_KEY pencil .)
+    $end            reduce using rule 12 (shape -> SHAPE ID O_KEY pencil .)
+
+
+state 18
+
+    (13) pencil -> PENCIL . ID fill
+
+    ID              shift and go to state 24
+
+
+state 19
+
+    (14) pencil -> fill .
+
+    SHAPE           reduce using rule 14 (pencil -> fill .)
+    DRAW            reduce using rule 14 (pencil -> fill .)
+    $end            reduce using rule 14 (pencil -> fill .)
+
+
+state 20
+
+    (15) fill -> FILL . ID axiom
+
+    ID              shift and go to state 25
+
+
+state 21
+
+    (16) fill -> axiom .
+
+    SHAPE           reduce using rule 16 (fill -> axiom .)
+    DRAW            reduce using rule 16 (fill -> axiom .)
+    $end            reduce using rule 16 (fill -> axiom .)
+
+
+state 22
+
+    (17) axiom -> AXIOM . O_KEY instructions C_KEY rules
+
+    O_KEY           shift and go to state 26
+
+
+state 23
+
+    (9) draw -> DRAW ID INT COMMA . INT
+
+    INT             shift and go to state 27
+
+
+state 24
+
+    (13) pencil -> PENCIL ID . fill
+    (15) fill -> . FILL ID axiom
+    (16) fill -> . axiom
+    (17) axiom -> . AXIOM O_KEY instructions C_KEY rules
+
+    FILL            shift and go to state 20
+    AXIOM           shift and go to state 22
+
+    fill                           shift and go to state 28
+    axiom                          shift and go to state 21
+
+state 25
+
+    (15) fill -> FILL ID . axiom
+    (17) axiom -> . AXIOM O_KEY instructions C_KEY rules
+
+    AXIOM           shift and go to state 22
+
+    axiom                          shift and go to state 29
+
+state 26
+
+    (17) axiom -> AXIOM O_KEY . instructions C_KEY rules
+    (23) instructions -> . instruction instructions
+    (24) instructions -> . instruction
+    (25) instruction -> . LEFT INT
+    (26) instruction -> . LEFT FLOAT
+    (27) instruction -> . RIGHT INT
+    (28) instruction -> . RIGHT FLOAT
+    (29) instruction -> . LINE INT
+    (30) instruction -> . JUMP INT COMMA INT
+    (31) instruction -> . NILL
+    (32) instruction -> . PUSH INT COMMA INT
+    (33) instruction -> . POP
+    (34) instruction -> . CALL_RULE ID
+    (35) instruction -> . CALL_SHAPE ID
+
+    LEFT            shift and go to state 32
+    RIGHT           shift and go to state 33
+    LINE            shift and go to state 34
+    JUMP            shift and go to state 35
+    NILL            shift and go to state 36
+    PUSH            shift and go to state 37
+    POP             shift and go to state 38
+    CALL_RULE       shift and go to state 39
+    CALL_SHAPE      shift and go to state 40
+
+    instructions                   shift and go to state 30
+    instruction                    shift and go to state 31
+
+state 27
+
+    (9) draw -> DRAW ID INT COMMA INT .
+
+    DRAW            reduce using rule 9 (draw -> DRAW ID INT COMMA INT .)
+    SHAPE           reduce using rule 9 (draw -> DRAW ID INT COMMA INT .)
+    $end            reduce using rule 9 (draw -> DRAW ID INT COMMA INT .)
+
+
+state 28
+
+    (13) pencil -> PENCIL ID fill .
+
+    SHAPE           reduce using rule 13 (pencil -> PENCIL ID fill .)
+    DRAW            reduce using rule 13 (pencil -> PENCIL ID fill .)
+    $end            reduce using rule 13 (pencil -> PENCIL ID fill .)
+
+
+state 29
+
+    (15) fill -> FILL ID axiom .
+
+    SHAPE           reduce using rule 15 (fill -> FILL ID axiom .)
+    DRAW            reduce using rule 15 (fill -> FILL ID axiom .)
+    $end            reduce using rule 15 (fill -> FILL ID axiom .)
+
+
+state 30
+
+    (17) axiom -> AXIOM O_KEY instructions . C_KEY rules
+
+    C_KEY           shift and go to state 41
+
+
+state 31
+
+    (23) instructions -> instruction . instructions
+    (24) instructions -> instruction .
+    (23) instructions -> . instruction instructions
+    (24) instructions -> . instruction
+    (25) instruction -> . LEFT INT
+    (26) instruction -> . LEFT FLOAT
+    (27) instruction -> . RIGHT INT
+    (28) instruction -> . RIGHT FLOAT
+    (29) instruction -> . LINE INT
+    (30) instruction -> . JUMP INT COMMA INT
+    (31) instruction -> . NILL
+    (32) instruction -> . PUSH INT COMMA INT
+    (33) instruction -> . POP
+    (34) instruction -> . CALL_RULE ID
+    (35) instruction -> . CALL_SHAPE ID
+
+    C_KEY           reduce using rule 24 (instructions -> instruction .)
+    ITER            reduce using rule 24 (instructions -> instruction .)
+    LEFT            shift and go to state 32
+    RIGHT           shift and go to state 33
+    LINE            shift and go to state 34
+    JUMP            shift and go to state 35
+    NILL            shift and go to state 36
+    PUSH            shift and go to state 37
+    POP             shift and go to state 38
+    CALL_RULE       shift and go to state 39
+    CALL_SHAPE      shift and go to state 40
+
+    instruction                    shift and go to state 31
+    instructions                   shift and go to state 42
+
+state 32
+
+    (25) instruction -> LEFT . INT
+    (26) instruction -> LEFT . FLOAT
+
+    INT             shift and go to state 43
+    FLOAT           shift and go to state 44
+
+
+state 33
+
+    (27) instruction -> RIGHT . INT
+    (28) instruction -> RIGHT . FLOAT
+
+    INT             shift and go to state 45
+    FLOAT           shift and go to state 46
+
+
+state 34
+
+    (29) instruction -> LINE . INT
+
+    INT             shift and go to state 47
+
+
+state 35
+
+    (30) instruction -> JUMP . INT COMMA INT
+
+    INT             shift and go to state 48
+
+
+state 36
+
+    (31) instruction -> NILL .
+
+    LEFT            reduce using rule 31 (instruction -> NILL .)
+    RIGHT           reduce using rule 31 (instruction -> NILL .)
+    LINE            reduce using rule 31 (instruction -> NILL .)
+    JUMP            reduce using rule 31 (instruction -> NILL .)
+    NILL            reduce using rule 31 (instruction -> NILL .)
+    PUSH            reduce using rule 31 (instruction -> NILL .)
+    POP             reduce using rule 31 (instruction -> NILL .)
+    CALL_RULE       reduce using rule 31 (instruction -> NILL .)
+    CALL_SHAPE      reduce using rule 31 (instruction -> NILL .)
+    C_KEY           reduce using rule 31 (instruction -> NILL .)
+    ITER            reduce using rule 31 (instruction -> NILL .)
+
+
+state 37
+
+    (32) instruction -> PUSH . INT COMMA INT
+
+    INT             shift and go to state 49
+
+
+state 38
+
+    (33) instruction -> POP .
+
+    LEFT            reduce using rule 33 (instruction -> POP .)
+    RIGHT           reduce using rule 33 (instruction -> POP .)
+    LINE            reduce using rule 33 (instruction -> POP .)
+    JUMP            reduce using rule 33 (instruction -> POP .)
+    NILL            reduce using rule 33 (instruction -> POP .)
+    PUSH            reduce using rule 33 (instruction -> POP .)
+    POP             reduce using rule 33 (instruction -> POP .)
+    CALL_RULE       reduce using rule 33 (instruction -> POP .)
+    CALL_SHAPE      reduce using rule 33 (instruction -> POP .)
+    C_KEY           reduce using rule 33 (instruction -> POP .)
+    ITER            reduce using rule 33 (instruction -> POP .)
+
+
+state 39
+
+    (34) instruction -> CALL_RULE . ID
+
+    ID              shift and go to state 50
+
+
+state 40
+
+    (35) instruction -> CALL_SHAPE . ID
+
+    ID              shift and go to state 51
+
+
+state 41
+
+    (17) axiom -> AXIOM O_KEY instructions C_KEY . rules
+    (18) rules -> . rule rules
+    (19) rules -> . depth
+    (20) rule -> . RULE ID O_KEY base instructions loops
+    (49) depth -> . DEPTH INT C_KEY
+    (50) depth -> . C_KEY
+
+    RULE            shift and go to state 56
+    DEPTH           shift and go to state 57
+    C_KEY           shift and go to state 52
+
+    rules                          shift and go to state 53
+    rule                           shift and go to state 54
+    depth                          shift and go to state 55
+
+state 42
+
+    (23) instructions -> instruction instructions .
+
+    C_KEY           reduce using rule 23 (instructions -> instruction instructions .)
+    ITER            reduce using rule 23 (instructions -> instruction instructions .)
+
+
+state 43
+
+    (25) instruction -> LEFT INT .
+
+    LEFT            reduce using rule 25 (instruction -> LEFT INT .)
+    RIGHT           reduce using rule 25 (instruction -> LEFT INT .)
+    LINE            reduce using rule 25 (instruction -> LEFT INT .)
+    JUMP            reduce using rule 25 (instruction -> LEFT INT .)
+    NILL            reduce using rule 25 (instruction -> LEFT INT .)
+    PUSH            reduce using rule 25 (instruction -> LEFT INT .)
+    POP             reduce using rule 25 (instruction -> LEFT INT .)
+    CALL_RULE       reduce using rule 25 (instruction -> LEFT INT .)
+    CALL_SHAPE      reduce using rule 25 (instruction -> LEFT INT .)
+    C_KEY           reduce using rule 25 (instruction -> LEFT INT .)
+    ITER            reduce using rule 25 (instruction -> LEFT INT .)
+
+
+state 44
+
+    (26) instruction -> LEFT FLOAT .
+
+    LEFT            reduce using rule 26 (instruction -> LEFT FLOAT .)
+    RIGHT           reduce using rule 26 (instruction -> LEFT FLOAT .)
+    LINE            reduce using rule 26 (instruction -> LEFT FLOAT .)
+    JUMP            reduce using rule 26 (instruction -> LEFT FLOAT .)
+    NILL            reduce using rule 26 (instruction -> LEFT FLOAT .)
+    PUSH            reduce using rule 26 (instruction -> LEFT FLOAT .)
+    POP             reduce using rule 26 (instruction -> LEFT FLOAT .)
+    CALL_RULE       reduce using rule 26 (instruction -> LEFT FLOAT .)
+    CALL_SHAPE      reduce using rule 26 (instruction -> LEFT FLOAT .)
+    C_KEY           reduce using rule 26 (instruction -> LEFT FLOAT .)
+    ITER            reduce using rule 26 (instruction -> LEFT FLOAT .)
+
+
+state 45
+
+    (27) instruction -> RIGHT INT .
+
+    LEFT            reduce using rule 27 (instruction -> RIGHT INT .)
+    RIGHT           reduce using rule 27 (instruction -> RIGHT INT .)
+    LINE            reduce using rule 27 (instruction -> RIGHT INT .)
+    JUMP            reduce using rule 27 (instruction -> RIGHT INT .)
+    NILL            reduce using rule 27 (instruction -> RIGHT INT .)
+    PUSH            reduce using rule 27 (instruction -> RIGHT INT .)
+    POP             reduce using rule 27 (instruction -> RIGHT INT .)
+    CALL_RULE       reduce using rule 27 (instruction -> RIGHT INT .)
+    CALL_SHAPE      reduce using rule 27 (instruction -> RIGHT INT .)
+    C_KEY           reduce using rule 27 (instruction -> RIGHT INT .)
+    ITER            reduce using rule 27 (instruction -> RIGHT INT .)
+
+
+state 46
+
+    (28) instruction -> RIGHT FLOAT .
+
+    LEFT            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    RIGHT           reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    LINE            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    JUMP            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    NILL            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    PUSH            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    POP             reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    CALL_RULE       reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    CALL_SHAPE      reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    C_KEY           reduce using rule 28 (instruction -> RIGHT FLOAT .)
+    ITER            reduce using rule 28 (instruction -> RIGHT FLOAT .)
+
+
+state 47
+
+    (29) instruction -> LINE INT .
+
+    LEFT            reduce using rule 29 (instruction -> LINE INT .)
+    RIGHT           reduce using rule 29 (instruction -> LINE INT .)
+    LINE            reduce using rule 29 (instruction -> LINE INT .)
+    JUMP            reduce using rule 29 (instruction -> LINE INT .)
+    NILL            reduce using rule 29 (instruction -> LINE INT .)
+    PUSH            reduce using rule 29 (instruction -> LINE INT .)
+    POP             reduce using rule 29 (instruction -> LINE INT .)
+    CALL_RULE       reduce using rule 29 (instruction -> LINE INT .)
+    CALL_SHAPE      reduce using rule 29 (instruction -> LINE INT .)
+    C_KEY           reduce using rule 29 (instruction -> LINE INT .)
+    ITER            reduce using rule 29 (instruction -> LINE INT .)
+
+
+state 48
+
+    (30) instruction -> JUMP INT . COMMA INT
+
+    COMMA           shift and go to state 58
+
+
+state 49
+
+    (32) instruction -> PUSH INT . COMMA INT
+
+    COMMA           shift and go to state 59
+
+
+state 50
+
+    (34) instruction -> CALL_RULE ID .
+
+    LEFT            reduce using rule 34 (instruction -> CALL_RULE ID .)
+    RIGHT           reduce using rule 34 (instruction -> CALL_RULE ID .)
+    LINE            reduce using rule 34 (instruction -> CALL_RULE ID .)
+    JUMP            reduce using rule 34 (instruction -> CALL_RULE ID .)
+    NILL            reduce using rule 34 (instruction -> CALL_RULE ID .)
+    PUSH            reduce using rule 34 (instruction -> CALL_RULE ID .)
+    POP             reduce using rule 34 (instruction -> CALL_RULE ID .)
+    CALL_RULE       reduce using rule 34 (instruction -> CALL_RULE ID .)
+    CALL_SHAPE      reduce using rule 34 (instruction -> CALL_RULE ID .)
+    C_KEY           reduce using rule 34 (instruction -> CALL_RULE ID .)
+    ITER            reduce using rule 34 (instruction -> CALL_RULE ID .)
+
+
+state 51
+
+    (35) instruction -> CALL_SHAPE ID .
+
+    LEFT            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    RIGHT           reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    LINE            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    JUMP            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    NILL            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    PUSH            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    POP             reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    CALL_RULE       reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    CALL_SHAPE      reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    C_KEY           reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+    ITER            reduce using rule 35 (instruction -> CALL_SHAPE ID .)
+
+
+state 52
+
+    (50) depth -> C_KEY .
+
+    SHAPE           reduce using rule 50 (depth -> C_KEY .)
+    DRAW            reduce using rule 50 (depth -> C_KEY .)
+    $end            reduce using rule 50 (depth -> C_KEY .)
+
+
+state 53
+
+    (17) axiom -> AXIOM O_KEY instructions C_KEY rules .
+
+    SHAPE           reduce using rule 17 (axiom -> AXIOM O_KEY instructions C_KEY rules .)
+    DRAW            reduce using rule 17 (axiom -> AXIOM O_KEY instructions C_KEY rules .)
+    $end            reduce using rule 17 (axiom -> AXIOM O_KEY instructions C_KEY rules .)
+
+
+state 54
+
+    (18) rules -> rule . rules
+    (18) rules -> . rule rules
+    (19) rules -> . depth
+    (20) rule -> . RULE ID O_KEY base instructions loops
+    (49) depth -> . DEPTH INT C_KEY
+    (50) depth -> . C_KEY
+
+    RULE            shift and go to state 56
+    DEPTH           shift and go to state 57
+    C_KEY           shift and go to state 52
+
+    rule                           shift and go to state 54
+    rules                          shift and go to state 60
+    depth                          shift and go to state 55
+
+state 55
+
+    (19) rules -> depth .
+
+    SHAPE           reduce using rule 19 (rules -> depth .)
+    DRAW            reduce using rule 19 (rules -> depth .)
+    $end            reduce using rule 19 (rules -> depth .)
+
+
+state 56
+
+    (20) rule -> RULE . ID O_KEY base instructions loops
+
+    ID              shift and go to state 61
+
+
+state 57
+
+    (49) depth -> DEPTH . INT C_KEY
+
+    INT             shift and go to state 62
+
+
+state 58
+
+    (30) instruction -> JUMP INT COMMA . INT
+
+    INT             shift and go to state 63
+
+
+state 59
+
+    (32) instruction -> PUSH INT COMMA . INT
+
+    INT             shift and go to state 64
+
+
+state 60
+
+    (18) rules -> rule rules .
+
+    SHAPE           reduce using rule 18 (rules -> rule rules .)
+    DRAW            reduce using rule 18 (rules -> rule rules .)
+    $end            reduce using rule 18 (rules -> rule rules .)
+
+
+state 61
+
+    (20) rule -> RULE ID . O_KEY base instructions loops
+
+    O_KEY           shift and go to state 65
+
+
+state 62
+
+    (49) depth -> DEPTH INT . C_KEY
+
+    C_KEY           shift and go to state 66
+
+
+state 63
+
+    (30) instruction -> JUMP INT COMMA INT .
+
+    LEFT            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    RIGHT           reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    LINE            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    JUMP            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    NILL            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    PUSH            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    POP             reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    CALL_RULE       reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    CALL_SHAPE      reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    C_KEY           reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+    ITER            reduce using rule 30 (instruction -> JUMP INT COMMA INT .)
+
+
+state 64
+
+    (32) instruction -> PUSH INT COMMA INT .
+
+    LEFT            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    RIGHT           reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    LINE            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    JUMP            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    NILL            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    PUSH            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    POP             reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    CALL_RULE       reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    CALL_SHAPE      reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    C_KEY           reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+    ITER            reduce using rule 32 (instruction -> PUSH INT COMMA INT .)
+
+
+state 65
+
+    (20) rule -> RULE ID O_KEY . base instructions loops
+    (21) base -> . BASE TWO_POINT instruction_base
+    (22) base -> . BASE O_KEY instructions_base C_KEY
+
+    BASE            shift and go to state 68
+
+    base                           shift and go to state 67
+
+state 66
+
+    (49) depth -> DEPTH INT C_KEY .
+
+    SHAPE           reduce using rule 49 (depth -> DEPTH INT C_KEY .)
+    DRAW            reduce using rule 49 (depth -> DEPTH INT C_KEY .)
+    $end            reduce using rule 49 (depth -> DEPTH INT C_KEY .)
+
+
+state 67
+
+    (20) rule -> RULE ID O_KEY base . instructions loops
+    (23) instructions -> . instruction instructions
+    (24) instructions -> . instruction
+    (25) instruction -> . LEFT INT
+    (26) instruction -> . LEFT FLOAT
+    (27) instruction -> . RIGHT INT
+    (28) instruction -> . RIGHT FLOAT
+    (29) instruction -> . LINE INT
+    (30) instruction -> . JUMP INT COMMA INT
+    (31) instruction -> . NILL
+    (32) instruction -> . PUSH INT COMMA INT
+    (33) instruction -> . POP
+    (34) instruction -> . CALL_RULE ID
+    (35) instruction -> . CALL_SHAPE ID
+
+    LEFT            shift and go to state 32
+    RIGHT           shift and go to state 33
+    LINE            shift and go to state 34
+    JUMP            shift and go to state 35
+    NILL            shift and go to state 36
+    PUSH            shift and go to state 37
+    POP             shift and go to state 38
+    CALL_RULE       shift and go to state 39
+    CALL_SHAPE      shift and go to state 40
+
+    instructions                   shift and go to state 69
+    instruction                    shift and go to state 31
+
+state 68
+
+    (21) base -> BASE . TWO_POINT instruction_base
+    (22) base -> BASE . O_KEY instructions_base C_KEY
+
+    TWO_POINT       shift and go to state 70
+    O_KEY           shift and go to state 71
+
+
+state 69
+
+    (20) rule -> RULE ID O_KEY base instructions . loops
+    (47) loops -> . ITER INT C_KEY
+    (48) loops -> . C_KEY
+
+    ITER            shift and go to state 73
+    C_KEY           shift and go to state 74
+
+    loops                          shift and go to state 72
+
+state 70
+
+    (21) base -> BASE TWO_POINT . instruction_base
+    (36) instruction_base -> . LEFT INT
+    (37) instruction_base -> . LEFT FLOAT
+    (38) instruction_base -> . RIGHT INT
+    (39) instruction_base -> . RIGHT FLOAT
+    (40) instruction_base -> . LINE INT
+    (41) instruction_base -> . JUMP INT COMMA INT
+    (42) instruction_base -> . NILL
+    (43) instruction_base -> . PUSH INT COMMA INT
+    (44) instruction_base -> . POP
+
+    LEFT            shift and go to state 76
+    RIGHT           shift and go to state 77
+    LINE            shift and go to state 78
+    JUMP            shift and go to state 79
+    NILL            shift and go to state 80
+    PUSH            shift and go to state 81
+    POP             shift and go to state 82
+
+    instruction_base               shift and go to state 75
+
+state 71
+
+    (22) base -> BASE O_KEY . instructions_base C_KEY
+    (45) instructions_base -> . instruction_base instructions_base
+    (46) instructions_base -> . instruction_base
+    (36) instruction_base -> . LEFT INT
+    (37) instruction_base -> . LEFT FLOAT
+    (38) instruction_base -> . RIGHT INT
+    (39) instruction_base -> . RIGHT FLOAT
+    (40) instruction_base -> . LINE INT
+    (41) instruction_base -> . JUMP INT COMMA INT
+    (42) instruction_base -> . NILL
+    (43) instruction_base -> . PUSH INT COMMA INT
+    (44) instruction_base -> . POP
+
+    LEFT            shift and go to state 76
+    RIGHT           shift and go to state 77
+    LINE            shift and go to state 78
+    JUMP            shift and go to state 79
+    NILL            shift and go to state 80
+    PUSH            shift and go to state 81
+    POP             shift and go to state 82
+
+    instructions_base              shift and go to state 83
+    instruction_base               shift and go to state 84
+
+state 72
+
+    (20) rule -> RULE ID O_KEY base instructions loops .
+
+    RULE            reduce using rule 20 (rule -> RULE ID O_KEY base instructions loops .)
+    DEPTH           reduce using rule 20 (rule -> RULE ID O_KEY base instructions loops .)
+    C_KEY           reduce using rule 20 (rule -> RULE ID O_KEY base instructions loops .)
+
+
+state 73
+
+    (47) loops -> ITER . INT C_KEY
+
+    INT             shift and go to state 85
+
+
+state 74
+
+    (48) loops -> C_KEY .
+
+    RULE            reduce using rule 48 (loops -> C_KEY .)
+    DEPTH           reduce using rule 48 (loops -> C_KEY .)
+    C_KEY           reduce using rule 48 (loops -> C_KEY .)
+
+
+state 75
+
+    (21) base -> BASE TWO_POINT instruction_base .
+
+    LEFT            reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    RIGHT           reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    LINE            reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    JUMP            reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    NILL            reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    PUSH            reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    POP             reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    CALL_RULE       reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+    CALL_SHAPE      reduce using rule 21 (base -> BASE TWO_POINT instruction_base .)
+
+
+state 76
+
+    (36) instruction_base -> LEFT . INT
+    (37) instruction_base -> LEFT . FLOAT
+
+    INT             shift and go to state 86
+    FLOAT           shift and go to state 87
+
+
+state 77
+
+    (38) instruction_base -> RIGHT . INT
+    (39) instruction_base -> RIGHT . FLOAT
+
+    INT             shift and go to state 88
+    FLOAT           shift and go to state 89
+
+
+state 78
+
+    (40) instruction_base -> LINE . INT
+
+    INT             shift and go to state 90
+
+
+state 79
+
+    (41) instruction_base -> JUMP . INT COMMA INT
+
+    INT             shift and go to state 91
+
+
+state 80
+
+    (42) instruction_base -> NILL .
+
+    LEFT            reduce using rule 42 (instruction_base -> NILL .)
+    RIGHT           reduce using rule 42 (instruction_base -> NILL .)
+    LINE            reduce using rule 42 (instruction_base -> NILL .)
+    JUMP            reduce using rule 42 (instruction_base -> NILL .)
+    NILL            reduce using rule 42 (instruction_base -> NILL .)
+    PUSH            reduce using rule 42 (instruction_base -> NILL .)
+    POP             reduce using rule 42 (instruction_base -> NILL .)
+    CALL_RULE       reduce using rule 42 (instruction_base -> NILL .)
+    CALL_SHAPE      reduce using rule 42 (instruction_base -> NILL .)
+    C_KEY           reduce using rule 42 (instruction_base -> NILL .)
+
+
+state 81
+
+    (43) instruction_base -> PUSH . INT COMMA INT
+
+    INT             shift and go to state 92
+
+
+state 82
+
+    (44) instruction_base -> POP .
+
+    LEFT            reduce using rule 44 (instruction_base -> POP .)
+    RIGHT           reduce using rule 44 (instruction_base -> POP .)
+    LINE            reduce using rule 44 (instruction_base -> POP .)
+    JUMP            reduce using rule 44 (instruction_base -> POP .)
+    NILL            reduce using rule 44 (instruction_base -> POP .)
+    PUSH            reduce using rule 44 (instruction_base -> POP .)
+    POP             reduce using rule 44 (instruction_base -> POP .)
+    CALL_RULE       reduce using rule 44 (instruction_base -> POP .)
+    CALL_SHAPE      reduce using rule 44 (instruction_base -> POP .)
+    C_KEY           reduce using rule 44 (instruction_base -> POP .)
+
+
+state 83
+
+    (22) base -> BASE O_KEY instructions_base . C_KEY
+
+    C_KEY           shift and go to state 93
+
+
+state 84
+
+    (45) instructions_base -> instruction_base . instructions_base
+    (46) instructions_base -> instruction_base .
+    (45) instructions_base -> . instruction_base instructions_base
+    (46) instructions_base -> . instruction_base
+    (36) instruction_base -> . LEFT INT
+    (37) instruction_base -> . LEFT FLOAT
+    (38) instruction_base -> . RIGHT INT
+    (39) instruction_base -> . RIGHT FLOAT
+    (40) instruction_base -> . LINE INT
+    (41) instruction_base -> . JUMP INT COMMA INT
+    (42) instruction_base -> . NILL
+    (43) instruction_base -> . PUSH INT COMMA INT
+    (44) instruction_base -> . POP
+
+    C_KEY           reduce using rule 46 (instructions_base -> instruction_base .)
+    LEFT            shift and go to state 76
+    RIGHT           shift and go to state 77
+    LINE            shift and go to state 78
+    JUMP            shift and go to state 79
+    NILL            shift and go to state 80
+    PUSH            shift and go to state 81
+    POP             shift and go to state 82
+
+    instruction_base               shift and go to state 84
+    instructions_base              shift and go to state 94
+
+state 85
+
+    (47) loops -> ITER INT . C_KEY
+
+    C_KEY           shift and go to state 95
+
+
+state 86
+
+    (36) instruction_base -> LEFT INT .
+
+    LEFT            reduce using rule 36 (instruction_base -> LEFT INT .)
+    RIGHT           reduce using rule 36 (instruction_base -> LEFT INT .)
+    LINE            reduce using rule 36 (instruction_base -> LEFT INT .)
+    JUMP            reduce using rule 36 (instruction_base -> LEFT INT .)
+    NILL            reduce using rule 36 (instruction_base -> LEFT INT .)
+    PUSH            reduce using rule 36 (instruction_base -> LEFT INT .)
+    POP             reduce using rule 36 (instruction_base -> LEFT INT .)
+    CALL_RULE       reduce using rule 36 (instruction_base -> LEFT INT .)
+    CALL_SHAPE      reduce using rule 36 (instruction_base -> LEFT INT .)
+    C_KEY           reduce using rule 36 (instruction_base -> LEFT INT .)
+
+
+state 87
+
+    (37) instruction_base -> LEFT FLOAT .
+
+    LEFT            reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    RIGHT           reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    LINE            reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    JUMP            reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    NILL            reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    PUSH            reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    POP             reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    CALL_RULE       reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    CALL_SHAPE      reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+    C_KEY           reduce using rule 37 (instruction_base -> LEFT FLOAT .)
+
+
+state 88
+
+    (38) instruction_base -> RIGHT INT .
+
+    LEFT            reduce using rule 38 (instruction_base -> RIGHT INT .)
+    RIGHT           reduce using rule 38 (instruction_base -> RIGHT INT .)
+    LINE            reduce using rule 38 (instruction_base -> RIGHT INT .)
+    JUMP            reduce using rule 38 (instruction_base -> RIGHT INT .)
+    NILL            reduce using rule 38 (instruction_base -> RIGHT INT .)
+    PUSH            reduce using rule 38 (instruction_base -> RIGHT INT .)
+    POP             reduce using rule 38 (instruction_base -> RIGHT INT .)
+    CALL_RULE       reduce using rule 38 (instruction_base -> RIGHT INT .)
+    CALL_SHAPE      reduce using rule 38 (instruction_base -> RIGHT INT .)
+    C_KEY           reduce using rule 38 (instruction_base -> RIGHT INT .)
+
+
+state 89
+
+    (39) instruction_base -> RIGHT FLOAT .
+
+    LEFT            reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    RIGHT           reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    LINE            reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    JUMP            reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    NILL            reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    PUSH            reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    POP             reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    CALL_RULE       reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    CALL_SHAPE      reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+    C_KEY           reduce using rule 39 (instruction_base -> RIGHT FLOAT .)
+
+
+state 90
+
+    (40) instruction_base -> LINE INT .
+
+    LEFT            reduce using rule 40 (instruction_base -> LINE INT .)
+    RIGHT           reduce using rule 40 (instruction_base -> LINE INT .)
+    LINE            reduce using rule 40 (instruction_base -> LINE INT .)
+    JUMP            reduce using rule 40 (instruction_base -> LINE INT .)
+    NILL            reduce using rule 40 (instruction_base -> LINE INT .)
+    PUSH            reduce using rule 40 (instruction_base -> LINE INT .)
+    POP             reduce using rule 40 (instruction_base -> LINE INT .)
+    CALL_RULE       reduce using rule 40 (instruction_base -> LINE INT .)
+    CALL_SHAPE      reduce using rule 40 (instruction_base -> LINE INT .)
+    C_KEY           reduce using rule 40 (instruction_base -> LINE INT .)
+
+
+state 91
+
+    (41) instruction_base -> JUMP INT . COMMA INT
+
+    COMMA           shift and go to state 96
+
+
+state 92
+
+    (43) instruction_base -> PUSH INT . COMMA INT
+
+    COMMA           shift and go to state 97
+
+
+state 93
+
+    (22) base -> BASE O_KEY instructions_base C_KEY .
+
+    LEFT            reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    RIGHT           reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    LINE            reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    JUMP            reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    NILL            reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    PUSH            reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    POP             reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    CALL_RULE       reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+    CALL_SHAPE      reduce using rule 22 (base -> BASE O_KEY instructions_base C_KEY .)
+
+
+state 94
+
+    (45) instructions_base -> instruction_base instructions_base .
+
+    C_KEY           reduce using rule 45 (instructions_base -> instruction_base instructions_base .)
+
+
+state 95
+
+    (47) loops -> ITER INT C_KEY .
+
+    RULE            reduce using rule 47 (loops -> ITER INT C_KEY .)
+    DEPTH           reduce using rule 47 (loops -> ITER INT C_KEY .)
+    C_KEY           reduce using rule 47 (loops -> ITER INT C_KEY .)
+
+
+state 96
+
+    (41) instruction_base -> JUMP INT COMMA . INT
+
+    INT             shift and go to state 98
+
+
+state 97
+
+    (43) instruction_base -> PUSH INT COMMA . INT
+
+    INT             shift and go to state 99
+
+
+state 98
+
+    (41) instruction_base -> JUMP INT COMMA INT .
+
+    LEFT            reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    RIGHT           reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    LINE            reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    JUMP            reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    NILL            reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    PUSH            reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    POP             reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    CALL_RULE       reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    CALL_SHAPE      reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+    C_KEY           reduce using rule 41 (instruction_base -> JUMP INT COMMA INT .)
+
+
+state 99
+
+    (43) instruction_base -> PUSH INT COMMA INT .
+
+    LEFT            reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    RIGHT           reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    LINE            reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    JUMP            reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    NILL            reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    PUSH            reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    POP             reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    CALL_RULE       reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    CALL_SHAPE      reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+    C_KEY           reduce using rule 43 (instruction_base -> PUSH INT COMMA INT .)
+

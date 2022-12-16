@@ -1,3 +1,4 @@
+from ast import keyword
 from lexer import *
 from ply import yacc as yacc
 from utils import *
@@ -20,7 +21,9 @@ def p_draws(t):
 			  | draw'''
 
 def p_draw(t):
-	'''draw : DRAW ID INT COMMA INT'''
+	'''draw : DRAW ID INT COMMA INT
+	        | DRAW ID
+	        | DRAW NILL'''
 
 def p_shape(t):
 	'''shape : SHAPE ID O_KEY pencil'''
@@ -103,8 +106,11 @@ def p_depth(t):
 
 
 def p_error(p):
-    if p == None:
-        token = "EOF"
-    else:
-        token = f"'{p.value}' en la línea {p.lineno}"
-    print(f"Syntax error: No se esperaba {token}")
+	if p == None:
+		token = "EOF"
+	else:
+		if p.value in reserved:
+			token = f"keyword '{p.value}' en la línea {p.lineno}"
+		else:
+			token = f"'{p.value}' en la línea {p.lineno}"
+	print(f"Syntax error: No se esperaba {token}")
