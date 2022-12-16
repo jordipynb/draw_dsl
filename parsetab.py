@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AXIOM BASE CALL_RULE CALL_SHAPE COMMA C_KEY DEPTH DRAW FILL FLOAT ID INT ITER JUMP LEFT LINE NILL O_KEY PENCIL POP PUSH RIGHT RULE SHAPE TWO_POINTscene    : draws_instruction scene\n\t            | draws_instruction\n\t\t\t\t| shapesdraws_instruction : shapes drawsshapes : shape shapes \n\t          | shapedraws  : draw draws\n\t\t\t  | drawdraw : DRAW ID INT COMMA INT\n\t        | DRAW ID\n\t        | DRAW NILLshape : SHAPE ID O_KEY pencilpencil : PENCIL ID fill\n\t\t\t  | fillfill   : FILL ID axiom\n\t\t\t  | axiomaxiom  : AXIOM O_KEY instructions C_KEY rulesrules  : rule rules\n\t\t\t  | depthrule  : RULE ID O_KEY base instructions loopsbase : BASE TWO_POINT instruction_base \n\t\t\t| BASE O_KEY instructions_base C_KEYinstructions : instruction instructions\n\t\t\t\t    | instruction instruction  : LEFT  INT \n\t\t\t\t    | LEFT FLOAT    \n\t\t\t\t\t| RIGHT INT \n\t\t\t\t\t| RIGHT FLOAT     \n\t\t\t\t\t| LINE  INT   \n\t\t\t\t\t| JUMP  INT COMMA INT      \n\t\t\t\t\t| NILL  \n\t\t\t\t\t| PUSH  INT COMMA INT \t\t\n\t\t\t\t\t| POP \n\t\t\t\t\t| CALL_RULE ID\n\t\t\t\t\t| CALL_SHAPE IDinstruction_base  : LEFT  INT \n\t\t\t\t\t\t | LEFT FLOAT    \n\t\t\t\t\t\t | RIGHT INT \n\t\t\t\t\t\t | RIGHT FLOAT     \n\t\t\t\t\t\t | LINE  INT   \n\t\t\t\t\t\t | JUMP  INT COMMA INT      \n\t\t\t\t\t\t | NILL  \n\t\t\t\t\t\t | PUSH  INT COMMA INT \t\t\n\t\t\t\t\t\t | POP instructions_base : instruction_base instructions_base\n\t\t\t\t    \t | instruction_base loops  : ITER INT C_KEY\n\t\t\t  | C_KEYdepth  : DEPTH INT C_KEY\n\t          | C_KEY'
+_lr_signature = 'AXIOM BASE CALL_RULE CALL_SHAPE COMMA C_KEY DEPTH DRAW FILL FLOAT ID INT ITER JUMP LEFT LINE NILL O_KEY PENCIL POP PUSH RIGHT RULE SHAPE TWO_POINTscene  : draws_instructiondraws_instruction : shape draws_instruction\n\t                     | draw draws_instruction\n\t\t\t\t\t\t | shape\n\t\t\t\t\t\t | drawdraw : DRAW ID INT COMMA INT\n\t        | DRAW ID\n\t\t\t| DRAW NILLshape : SHAPE ID O_KEY pencilpencil : PENCIL ID fill\n\t\t\t  | fillfill   : FILL ID axiom\n\t\t\t  | axiomaxiom  : AXIOM O_KEY instructions C_KEY rulesrules  : rule rules\n\t\t\t  | depthrule  : RULE ID O_KEY base instructions loopsbase : BASE TWO_POINT instruction_base \n\t\t\t| BASE O_KEY instructions_base C_KEYinstructions : instruction instructions\n\t\t\t\t    | instruction instruction  : LEFT  INT \n\t\t\t\t    | LEFT FLOAT    \n\t\t\t\t\t| RIGHT INT \n\t\t\t\t\t| RIGHT FLOAT     \n\t\t\t\t\t| LINE  INT   \n\t\t\t\t\t| JUMP  INT COMMA INT      \n\t\t\t\t\t| NILL  \n\t\t\t\t\t| PUSH  INT COMMA INT \t\t\n\t\t\t\t\t| POP \n\t\t\t\t\t| CALL_RULE ID\n\t\t\t\t\t| CALL_SHAPE IDinstruction_base  : LEFT  INT \n\t\t\t\t\t\t | LEFT FLOAT    \n\t\t\t\t\t\t | RIGHT INT \n\t\t\t\t\t\t | RIGHT FLOAT     \n\t\t\t\t\t\t | LINE  INT   \n\t\t\t\t\t\t | JUMP  INT COMMA INT      \n\t\t\t\t\t\t | NILL  \n\t\t\t\t\t\t | PUSH  INT COMMA INT \t\t\n\t\t\t\t\t\t | POP instructions_base : instruction_base instructions_base\n\t\t\t\t    \t | instruction_base loops  : ITER INT C_KEY\n\t\t\t  | C_KEYdepth  : DEPTH INT C_KEY\n\t          | C_KEY'
     
-_lr_action_items = {'SHAPE':([0,2,4,7,8,12,13,14,17,19,21,27,28,29,52,53,55,60,66,],[5,5,5,-4,-8,-7,-10,-11,-12,-14,-16,-9,-13,-15,-50,-17,-19,-18,-49,]),'$end':([1,2,3,4,6,7,8,10,12,13,14,17,19,21,27,28,29,52,53,55,60,66,],[0,-2,-3,-6,-1,-4,-8,-5,-7,-10,-11,-12,-14,-16,-9,-13,-15,-50,-17,-19,-18,-49,]),'DRAW':([3,4,8,10,13,14,17,19,21,27,28,29,52,53,55,60,66,],[9,-6,9,-5,-10,-11,-12,-14,-16,-9,-13,-15,-50,-17,-19,-18,-49,]),'ID':([5,9,18,20,39,40,56,],[11,13,24,25,50,51,61,]),'NILL':([9,26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[14,36,36,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,36,80,80,-21,-42,-44,80,-36,-37,-38,-39,-40,-22,-41,-43,]),'O_KEY':([11,22,61,68,],[15,26,65,71,]),'INT':([13,23,32,33,34,35,37,57,58,59,73,76,77,78,79,81,96,97,],[16,27,43,45,47,48,49,62,63,64,85,86,88,90,91,92,98,99,]),'PENCIL':([15,],[18,]),'FILL':([15,24,],[20,20,]),'AXIOM':([15,24,25,],[22,22,22,]),'COMMA':([16,48,49,91,92,],[23,58,59,96,97,]),'LEFT':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[32,32,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,32,76,76,-21,-42,-44,76,-36,-37,-38,-39,-40,-22,-41,-43,]),'RIGHT':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[33,33,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,33,77,77,-21,-42,-44,77,-36,-37,-38,-39,-40,-22,-41,-43,]),'LINE':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[34,34,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,34,78,78,-21,-42,-44,78,-36,-37,-38,-39,-40,-22,-41,-43,]),'JUMP':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[35,35,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,35,79,79,-21,-42,-44,79,-36,-37,-38,-39,-40,-22,-41,-43,]),'PUSH':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[37,37,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,37,81,81,-21,-42,-44,81,-36,-37,-38,-39,-40,-22,-41,-43,]),'POP':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,70,71,75,80,82,84,86,87,88,89,90,93,98,99,],[38,38,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,38,82,82,-21,-42,-44,82,-36,-37,-38,-39,-40,-22,-41,-43,]),'CALL_RULE':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,75,80,82,86,87,88,89,90,93,98,99,],[39,39,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,39,-21,-42,-44,-36,-37,-38,-39,-40,-22,-41,-43,]),'CALL_SHAPE':([26,31,36,38,43,44,45,46,47,50,51,63,64,67,75,80,82,86,87,88,89,90,93,98,99,],[40,40,-31,-33,-25,-26,-27,-28,-29,-34,-35,-30,-32,40,-21,-42,-44,-36,-37,-38,-39,-40,-22,-41,-43,]),'C_KEY':([30,31,36,38,41,42,43,44,45,46,47,50,51,54,62,63,64,69,72,74,80,82,83,84,85,86,87,88,89,90,94,95,98,99,],[41,-24,-31,-33,52,-23,-25,-26,-27,-28,-29,-34,-35,52,66,-30,-32,74,-20,-48,-42,-44,93,-46,95,-36,-37,-38,-39,-40,-45,-47,-41,-43,]),'ITER':([31,36,38,42,43,44,45,46,47,50,51,63,64,69,],[-24,-31,-33,-23,-25,-26,-27,-28,-29,-34,-35,-30,-32,73,]),'FLOAT':([32,33,76,77,],[44,46,87,89,]),'RULE':([41,54,72,74,95,],[56,56,-20,-48,-47,]),'DEPTH':([41,54,72,74,95,],[57,57,-20,-48,-47,]),'BASE':([65,],[68,]),'TWO_POINT':([68,],[70,]),}
+_lr_action_items = {'SHAPE':([0,3,4,10,11,14,16,18,24,25,26,49,50,52,57,63,],[5,5,5,-7,-8,-9,-11,-13,-6,-10,-12,-47,-14,-16,-15,-46,]),'DRAW':([0,3,4,10,11,14,16,18,24,25,26,49,50,52,57,63,],[6,6,6,-7,-8,-9,-11,-13,-6,-10,-12,-47,-14,-16,-15,-46,]),'$end':([1,2,3,4,7,8,10,11,14,16,18,24,25,26,49,50,52,57,63,],[0,-1,-4,-5,-2,-3,-7,-8,-9,-11,-13,-6,-10,-12,-47,-14,-16,-15,-46,]),'ID':([5,6,15,17,36,37,53,],[9,10,21,22,47,48,58,]),'NILL':([6,23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[11,33,33,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,33,77,77,-18,-39,-41,77,-33,-34,-35,-36,-37,-19,-38,-40,]),'O_KEY':([9,19,58,65,],[12,23,62,68,]),'INT':([10,20,29,30,31,32,34,54,55,56,70,73,74,75,76,78,93,94,],[13,24,40,42,44,45,46,59,60,61,82,83,85,87,88,89,95,96,]),'PENCIL':([12,],[15,]),'FILL':([12,21,],[17,17,]),'AXIOM':([12,21,22,],[19,19,19,]),'COMMA':([13,45,46,88,89,],[20,55,56,93,94,]),'LEFT':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[29,29,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,29,73,73,-18,-39,-41,73,-33,-34,-35,-36,-37,-19,-38,-40,]),'RIGHT':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[30,30,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,30,74,74,-18,-39,-41,74,-33,-34,-35,-36,-37,-19,-38,-40,]),'LINE':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[31,31,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,31,75,75,-18,-39,-41,75,-33,-34,-35,-36,-37,-19,-38,-40,]),'JUMP':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[32,32,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,32,76,76,-18,-39,-41,76,-33,-34,-35,-36,-37,-19,-38,-40,]),'PUSH':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[34,34,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,34,78,78,-18,-39,-41,78,-33,-34,-35,-36,-37,-19,-38,-40,]),'POP':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,67,68,72,77,79,81,83,84,85,86,87,90,95,96,],[35,35,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,35,79,79,-18,-39,-41,79,-33,-34,-35,-36,-37,-19,-38,-40,]),'CALL_RULE':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,72,77,79,83,84,85,86,87,90,95,96,],[36,36,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,36,-18,-39,-41,-33,-34,-35,-36,-37,-19,-38,-40,]),'CALL_SHAPE':([23,28,33,35,40,41,42,43,44,47,48,60,61,64,72,77,79,83,84,85,86,87,90,95,96,],[37,37,-28,-30,-22,-23,-24,-25,-26,-31,-32,-27,-29,37,-18,-39,-41,-33,-34,-35,-36,-37,-19,-38,-40,]),'C_KEY':([27,28,33,35,38,39,40,41,42,43,44,47,48,51,59,60,61,66,69,71,77,79,80,81,82,83,84,85,86,87,91,92,95,96,],[38,-21,-28,-30,49,-20,-22,-23,-24,-25,-26,-31,-32,49,63,-27,-29,71,-17,-45,-39,-41,90,-43,92,-33,-34,-35,-36,-37,-42,-44,-38,-40,]),'ITER':([28,33,35,39,40,41,42,43,44,47,48,60,61,66,],[-21,-28,-30,-20,-22,-23,-24,-25,-26,-31,-32,-27,-29,70,]),'FLOAT':([29,30,73,74,],[41,43,84,86,]),'RULE':([38,51,69,71,92,],[53,53,-17,-45,-44,]),'DEPTH':([38,51,69,71,92,],[54,54,-17,-45,-44,]),'BASE':([62,],[65,]),'TWO_POINT':([65,],[67,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'scene':([0,2,],[1,6,]),'draws_instruction':([0,2,],[2,2,]),'shapes':([0,2,4,],[3,3,10,]),'shape':([0,2,4,],[4,4,4,]),'draws':([3,8,],[7,12,]),'draw':([3,8,],[8,8,]),'pencil':([15,],[17,]),'fill':([15,24,],[19,28,]),'axiom':([15,24,25,],[21,21,29,]),'instructions':([26,31,67,],[30,42,69,]),'instruction':([26,31,67,],[31,31,31,]),'rules':([41,54,],[53,60,]),'rule':([41,54,],[54,54,]),'depth':([41,54,],[55,55,]),'base':([65,],[67,]),'loops':([69,],[72,]),'instruction_base':([70,71,84,],[75,84,84,]),'instructions_base':([71,84,],[83,94,]),}
+_lr_goto_items = {'scene':([0,],[1,]),'draws_instruction':([0,3,4,],[2,7,8,]),'shape':([0,3,4,],[3,3,3,]),'draw':([0,3,4,],[4,4,4,]),'pencil':([12,],[14,]),'fill':([12,21,],[16,25,]),'axiom':([12,21,22,],[18,18,26,]),'instructions':([23,28,64,],[27,39,66,]),'instruction':([23,28,64,],[28,28,28,]),'rules':([38,51,],[50,57,]),'rule':([38,51,],[51,51,]),'depth':([38,51,],[52,52,]),'base':([62,],[64,]),'loops':([66,],[69,]),'instruction_base':([67,68,81,],[72,81,81,]),'instructions_base':([68,81,],[80,91,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,54 +27,51 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> scene","S'",1,None,None,None),
-  ('scene -> draws_instruction scene','scene',2,'p_scene','grammar.py',8),
-  ('scene -> draws_instruction','scene',1,'p_scene','grammar.py',9),
-  ('scene -> shapes','scene',1,'p_scene','grammar.py',10),
-  ('draws_instruction -> shapes draws','draws_instruction',2,'p_draws_instruction','grammar.py',13),
-  ('shapes -> shape shapes','shapes',2,'p_shapes','grammar.py',16),
-  ('shapes -> shape','shapes',1,'p_shapes','grammar.py',17),
-  ('draws -> draw draws','draws',2,'p_draws','grammar.py',20),
-  ('draws -> draw','draws',1,'p_draws','grammar.py',21),
-  ('draw -> DRAW ID INT COMMA INT','draw',5,'p_draw','grammar.py',24),
-  ('draw -> DRAW ID','draw',2,'p_draw','grammar.py',25),
-  ('draw -> DRAW NILL','draw',2,'p_draw','grammar.py',26),
-  ('shape -> SHAPE ID O_KEY pencil','shape',4,'p_shape','grammar.py',29),
-  ('pencil -> PENCIL ID fill','pencil',3,'p_pencil','grammar.py',33),
-  ('pencil -> fill','pencil',1,'p_pencil','grammar.py',34),
-  ('fill -> FILL ID axiom','fill',3,'p_fill','grammar.py',37),
-  ('fill -> axiom','fill',1,'p_fill','grammar.py',38),
-  ('axiom -> AXIOM O_KEY instructions C_KEY rules','axiom',5,'p_axiom','grammar.py',41),
-  ('rules -> rule rules','rules',2,'p_rules','grammar.py',44),
-  ('rules -> depth','rules',1,'p_rules','grammar.py',45),
-  ('rule -> RULE ID O_KEY base instructions loops','rule',6,'p_rule','grammar.py',48),
-  ('base -> BASE TWO_POINT instruction_base','base',3,'p_base','grammar.py',51),
-  ('base -> BASE O_KEY instructions_base C_KEY','base',4,'p_base','grammar.py',52),
-  ('instructions -> instruction instructions','instructions',2,'p_instructions','grammar.py',55),
-  ('instructions -> instruction','instructions',1,'p_instructions','grammar.py',56),
-  ('instruction -> LEFT INT','instruction',2,'p_instruction','grammar.py',59),
-  ('instruction -> LEFT FLOAT','instruction',2,'p_instruction','grammar.py',60),
-  ('instruction -> RIGHT INT','instruction',2,'p_instruction','grammar.py',61),
-  ('instruction -> RIGHT FLOAT','instruction',2,'p_instruction','grammar.py',62),
-  ('instruction -> LINE INT','instruction',2,'p_instruction','grammar.py',63),
-  ('instruction -> JUMP INT COMMA INT','instruction',4,'p_instruction','grammar.py',64),
-  ('instruction -> NILL','instruction',1,'p_instruction','grammar.py',65),
-  ('instruction -> PUSH INT COMMA INT','instruction',4,'p_instruction','grammar.py',66),
-  ('instruction -> POP','instruction',1,'p_instruction','grammar.py',67),
-  ('instruction -> CALL_RULE ID','instruction',2,'p_instruction','grammar.py',68),
-  ('instruction -> CALL_SHAPE ID','instruction',2,'p_instruction','grammar.py',69),
-  ('instruction_base -> LEFT INT','instruction_base',2,'p_instruction_base','grammar.py',72),
-  ('instruction_base -> LEFT FLOAT','instruction_base',2,'p_instruction_base','grammar.py',73),
-  ('instruction_base -> RIGHT INT','instruction_base',2,'p_instruction_base','grammar.py',74),
-  ('instruction_base -> RIGHT FLOAT','instruction_base',2,'p_instruction_base','grammar.py',75),
-  ('instruction_base -> LINE INT','instruction_base',2,'p_instruction_base','grammar.py',76),
-  ('instruction_base -> JUMP INT COMMA INT','instruction_base',4,'p_instruction_base','grammar.py',77),
-  ('instruction_base -> NILL','instruction_base',1,'p_instruction_base','grammar.py',78),
-  ('instruction_base -> PUSH INT COMMA INT','instruction_base',4,'p_instruction_base','grammar.py',79),
-  ('instruction_base -> POP','instruction_base',1,'p_instruction_base','grammar.py',80),
-  ('instructions_base -> instruction_base instructions_base','instructions_base',2,'p_instructions_base','grammar.py',83),
-  ('instructions_base -> instruction_base','instructions_base',1,'p_instructions_base','grammar.py',84),
-  ('loops -> ITER INT C_KEY','loops',3,'p_loops','grammar.py',87),
-  ('loops -> C_KEY','loops',1,'p_loops','grammar.py',88),
-  ('depth -> DEPTH INT C_KEY','depth',3,'p_depth','grammar.py',97),
-  ('depth -> C_KEY','depth',1,'p_depth','grammar.py',98),
+  ('scene -> draws_instruction','scene',1,'p_scene','grammar.py',8),
+  ('draws_instruction -> shape draws_instruction','draws_instruction',2,'p_draws_instruction','grammar.py',11),
+  ('draws_instruction -> draw draws_instruction','draws_instruction',2,'p_draws_instruction','grammar.py',12),
+  ('draws_instruction -> shape','draws_instruction',1,'p_draws_instruction','grammar.py',13),
+  ('draws_instruction -> draw','draws_instruction',1,'p_draws_instruction','grammar.py',14),
+  ('draw -> DRAW ID INT COMMA INT','draw',5,'p_draw','grammar.py',25),
+  ('draw -> DRAW ID','draw',2,'p_draw','grammar.py',26),
+  ('draw -> DRAW NILL','draw',2,'p_draw','grammar.py',27),
+  ('shape -> SHAPE ID O_KEY pencil','shape',4,'p_shape','grammar.py',30),
+  ('pencil -> PENCIL ID fill','pencil',3,'p_pencil','grammar.py',34),
+  ('pencil -> fill','pencil',1,'p_pencil','grammar.py',35),
+  ('fill -> FILL ID axiom','fill',3,'p_fill','grammar.py',38),
+  ('fill -> axiom','fill',1,'p_fill','grammar.py',39),
+  ('axiom -> AXIOM O_KEY instructions C_KEY rules','axiom',5,'p_axiom','grammar.py',42),
+  ('rules -> rule rules','rules',2,'p_rules','grammar.py',45),
+  ('rules -> depth','rules',1,'p_rules','grammar.py',46),
+  ('rule -> RULE ID O_KEY base instructions loops','rule',6,'p_rule','grammar.py',49),
+  ('base -> BASE TWO_POINT instruction_base','base',3,'p_base','grammar.py',52),
+  ('base -> BASE O_KEY instructions_base C_KEY','base',4,'p_base','grammar.py',53),
+  ('instructions -> instruction instructions','instructions',2,'p_instructions','grammar.py',56),
+  ('instructions -> instruction','instructions',1,'p_instructions','grammar.py',57),
+  ('instruction -> LEFT INT','instruction',2,'p_instruction','grammar.py',60),
+  ('instruction -> LEFT FLOAT','instruction',2,'p_instruction','grammar.py',61),
+  ('instruction -> RIGHT INT','instruction',2,'p_instruction','grammar.py',62),
+  ('instruction -> RIGHT FLOAT','instruction',2,'p_instruction','grammar.py',63),
+  ('instruction -> LINE INT','instruction',2,'p_instruction','grammar.py',64),
+  ('instruction -> JUMP INT COMMA INT','instruction',4,'p_instruction','grammar.py',65),
+  ('instruction -> NILL','instruction',1,'p_instruction','grammar.py',66),
+  ('instruction -> PUSH INT COMMA INT','instruction',4,'p_instruction','grammar.py',67),
+  ('instruction -> POP','instruction',1,'p_instruction','grammar.py',68),
+  ('instruction -> CALL_RULE ID','instruction',2,'p_instruction','grammar.py',69),
+  ('instruction -> CALL_SHAPE ID','instruction',2,'p_instruction','grammar.py',70),
+  ('instruction_base -> LEFT INT','instruction_base',2,'p_instruction_base','grammar.py',73),
+  ('instruction_base -> LEFT FLOAT','instruction_base',2,'p_instruction_base','grammar.py',74),
+  ('instruction_base -> RIGHT INT','instruction_base',2,'p_instruction_base','grammar.py',75),
+  ('instruction_base -> RIGHT FLOAT','instruction_base',2,'p_instruction_base','grammar.py',76),
+  ('instruction_base -> LINE INT','instruction_base',2,'p_instruction_base','grammar.py',77),
+  ('instruction_base -> JUMP INT COMMA INT','instruction_base',4,'p_instruction_base','grammar.py',78),
+  ('instruction_base -> NILL','instruction_base',1,'p_instruction_base','grammar.py',79),
+  ('instruction_base -> PUSH INT COMMA INT','instruction_base',4,'p_instruction_base','grammar.py',80),
+  ('instruction_base -> POP','instruction_base',1,'p_instruction_base','grammar.py',81),
+  ('instructions_base -> instruction_base instructions_base','instructions_base',2,'p_instructions_base','grammar.py',84),
+  ('instructions_base -> instruction_base','instructions_base',1,'p_instructions_base','grammar.py',85),
+  ('loops -> ITER INT C_KEY','loops',3,'p_loops','grammar.py',88),
+  ('loops -> C_KEY','loops',1,'p_loops','grammar.py',89),
+  ('depth -> DEPTH INT C_KEY','depth',3,'p_depth','grammar.py',98),
+  ('depth -> C_KEY','depth',1,'p_depth','grammar.py',99),
 ]

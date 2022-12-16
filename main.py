@@ -1,4 +1,4 @@
-from grammar import*
+from grammar import *
 
 input = '''shape triangle {
 	pencil red
@@ -43,7 +43,6 @@ draw triangle 1 , 1'''
 # Give the lexer some input
 # Build the lexer
 # lexer = lex.lex(optimize=1)
-lexer = lex.lex()
 #lexer.input(input)
  
 # Tokenize
@@ -54,5 +53,4 @@ lexer = lex.lex()
 #     print(tok)
 
 # # parser = yacc.yacc(optimize=1)
-parser = yacc.yacc()
 parser.parse(input,lexer=lexer)
