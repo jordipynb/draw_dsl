@@ -46,19 +46,6 @@ draw triangles 1 , 1
 draw nill
 draw triangle 40 , 40'''
 
-# Give the lexer some input
-# Build the lexer
-# lexer = lex.lex(optimize=1)
-#lexer.input(input)
- 
-# Tokenize
-# while True:
-#     tok = lexer.token()
-#     if not tok: 
-#         break      # No more input
-#     print(tok)
-
-# # parser = yacc.yacc(optimize=1)
 ast = parser.parse(input,lexer=lexer)
 if ast:
 	print(ast) 
