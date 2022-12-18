@@ -1,6 +1,6 @@
 from grammar import *
 
-input = '''shape triangle {
+input = '''shape triangles {
 	pencil red
 	fill yellow
 	axiom { 
@@ -8,37 +8,43 @@ input = '''shape triangle {
 		line 400 
 		left 90
 		line 300 
-		left 126.9
-		line 500
-		call_shape triangle 
-		call_rule follow
+		left 126
+		line 500 
 	}
 	rule first {
-		base: nill
+		base : nill 
 		line 300
 	}
-	depth 5 
+	rule fitness {
+		base : nill
+		line 300
+		call_rule fitness
+	}
 }
 shape triangle {
-	pencil red
-	fill yellow
 	axiom { 
 		right 90
 		line 400
 		left 90
 		line 300
-		left 126.9
+		left 126
 		line 500
-		call_shape triangle
+		call_shape triangles
 		call_rule follow
 	}
 	rule follow {
-		base: nill
+		base { 
+			line 400
+			left 90
+			line 300
+		}
 		line 300
 	}
-	depth 5
+	depth 6
 }
-draw triangle 1 , 1'''
+draw triangles 1 , 1
+draw nill
+draw triangle 40 , 40'''
 
 # Give the lexer some input
 # Build the lexer
@@ -53,4 +59,9 @@ draw triangle 1 , 1'''
 #     print(tok)
 
 # # parser = yacc.yacc(optimize=1)
-parser.parse(input,lexer=lexer)
+ast = parser.parse(input,lexer=lexer)
+if ast:
+	print(ast) 
+else:
+	raise RuntimeError("AST Incomplete")
+ast.evaluate()

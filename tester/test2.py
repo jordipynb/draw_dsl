@@ -1,12 +1,12 @@
+import _tkinter
 import turtle
 
 def koch_snowflake():
-    axiom = "F"
-    rules = {"F":"F+F--F+F"}
+    axiom = "F++F++F"
+    rules = {"F":"F-F++F-F"}
     iterations = 3 # TOP: 7
     angle = 60
-    y_offset = -300
-    main(iterations,axiom,rules,angle,y_offset=y_offset)
+    main(iterations,axiom,rules,angle)
 
 def quadratic_koch_island():
     axiom = "F+F+F+F"
@@ -62,7 +62,7 @@ def sierpinski_curve():
 def sierpinski_sieve():
     axiom = "FXF--FF--FF"
     rules = {"F":"FF", "X":"--FXF++FXF++FXF--"}
-    iterations = 5 # TOP: 8
+    iterations = 2 # TOP: 8
     angle = 60
     y_offset = -300
     main(iterations,axiom,rules,angle,y_offset=y_offset)
@@ -213,7 +213,7 @@ def autosimilars_boxes():
 
 
 def circular_boxes():
-    axiom = "F"
+    axiom = "F+"
     rules = {"F":"F+F+F+F|"}
     iterations = 40 # TOP: 15
     angle = 90
@@ -244,18 +244,25 @@ def draw_l_system(t, instructions, angle, distance, angle_rule):
 def main(iterations, axiom, rules, angle, length=8, size=2, x_offset=0, y_offset=0,  offset_angle=0, width=600, height=600, angle_rule=0):
     inst = create_l_system(iterations, axiom, rules)
     t = turtle.Turtle()
-    wn = turtle.Screen()
-    wn.setup(width, height)
+    #wn = turtle.Screen()
+    #wn.setup(width, height)
     t.up()
-    t.backward(-x_offset)
-    t.left(90)
-    t.backward(-y_offset)
-    t.left(offset_angle)
+    #t.backward(-x_offset)
+    #t.left(90)
+    #t.backward(-y_offset)
+    #t.left(offset_angle)
+    t.goto(x_offset,y_offset)
     t.down()
     t.speed(0)
     t.pensize(size)
     draw_l_system(t, inst, angle, length, angle_rule)
     t.hideturtle()
-    wn.exitonclick()
-
-sierpinski_sieve()
+    #wn.exitonclick()
+try:
+    sierpinski_sieve()
+    koch_snowflake()
+    turtle.done()
+except turtle.Terminator:
+    pass
+except _tkinter.TclError:
+    pass

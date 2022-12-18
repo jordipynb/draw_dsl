@@ -22,7 +22,7 @@ reserved = {
     'pop'        : 'POP',
  }
 
-tokens  = ['O_KEY', 'C_KEY', 'FLOAT', 'INT', 'TWO_POINT', 'COMMA', 'ID'] + list(reserved.values())
+tokens  = ['O_KEY', 'C_KEY', 'INT', 'TWO_POINT', 'COMMA', 'ID'] + list(reserved.values())
 
 # Regular expression rules for simple tokens
 t_O_KEY       = r'\{'
@@ -31,15 +31,6 @@ t_TWO_POINT   = r':'
 t_COMMA       = r','
 
 # A regular expression rule with some action code
-def t_FLOAT(t):
-    r'\d+\.\d+'
-    try:
-        t.value = float(t.value)
-    except:
-        print(f'Error en línea {t.lineno}!! Token: {t.value} debe ser un número decimal') 
-        t.value = 0.
-    return t
-
 def t_INT(t):
     r'-\d+ | \d+'
     try:
