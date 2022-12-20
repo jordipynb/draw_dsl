@@ -1,4 +1,4 @@
-# Compilation Project (Draw DSL)  
+# Compilation Project
 Domain-Specific Language about painting flat shapes, fractals, and trees
 
 #### Authors:
