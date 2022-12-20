@@ -1,19 +1,19 @@
-# Proyecto de Compilacion
-## Draw Dsl
+# Compilation Project (Draw DSL)  
+Domain-Specific Language about painting flat shapes, fractals, and trees
 
-#### Integrantes:
+#### Authors:
 * Dianelys Cruz Mengana C-311
 * Jordan Pla C-311
 * Leandro Hernandez C-312
 
-#### Instalar paquetes necesarios
+#### Install necessary packages
 ```zsh
 pip install -r requirements.txt
 // Or
 python -m pip install -r requirements.txt
 ```
 
-#### Comenzar la ejecucion
+#### Run project
 ```zsh
 python main.py
 ```
