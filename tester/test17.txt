@@ -1,0 +1,35 @@
+shape tree_realistic {
+    pencil darkgreen
+    rule F {
+        base : line 5
+        call_rule G
+        left 20
+        push
+        push
+        call_rule F
+        pop
+        right 20
+        call_rule F
+        pop
+        right 20
+        call_rule G
+        push
+        right 20
+        call_rule G
+        call_rule F
+        pop
+        left 20
+        call_rule F
+    }
+    rule G {
+        base : line 5
+        call_rule G
+        call_rule G
+    }
+    axiom {
+        right 25
+        call_rule F (6)
+    }
+}
+
+draw tree_realistic 0,-330

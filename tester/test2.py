@@ -1,63 +1,4 @@
-import _tkinter
 import turtle
-
-def koch_snowflake():
-    axiom = "F++F++F"
-    rules = {"F":"F-F++F-F"}
-    iterations = 3 # TOP: 7
-    angle = 60
-    main(iterations,axiom,rules,angle)
-
-def quadratic_koch_island():
-    axiom = "F+F+F+F"
-    rules = {"F":"F-F+F+FFF-F-F+F"}
-    iterations = 2 # TOP: 4
-    angle = 90
-    main(iterations,axiom,rules,angle)
-
-def quadratic_snowflake():
-    axiom = "F--F"
-    rules = {"F":"F-F+F+F-F"}
-    iterations = 4 # TOP: 6
-    angle = 90
-    y_offset = -300
-    main(iterations,axiom,rules,angle,y_offset=y_offset)
-
-def crystal():
-    axiom = "F+F+F+F"
-    rules = {"F":"FF+F++F+F"}
-    iterations = 3 # TOP: 6
-    angle = 90
-    main(iterations,axiom,rules,angle)
-
-def box_fractal():
-    axiom = "F-F-F-F"
-    rules = {"F":"F-F+F+F-F"}
-    iterations = 4 # TOP: 6
-    angle = 90
-    y_offset = -300
-    main(iterations,axiom,rules,angle,y_offset=y_offset)
-
-def levy_c_curve():
-    axiom = "F"
-    rules = {"F":"+F--F+"}
-    iterations = 10 # TOP: 16
-    angle = 45
-    main(iterations,axiom,rules,angle)
-
-def sierpinski_arrowhead():
-    axiom = "YF"
-    rules = {"X":"YF+XF+Y", "Y":"XF-YF-X"}
-    iterations = 5 # TOP: 10
-    angle = 60
-    main(iterations,axiom,rules,angle)
-
-def sierpinski_curve():
-    axiom = "F+XF+F+XF"
-    rules = {"X":"XF-F+F-XF+F+XF-F+F-X"}
-    iterations = 4 # TOP: 8
-    angle = 90
-    main(iterations,axiom,rules,angle)
 
 def sierpinski_sieve():
     axiom = "FXF--FF--FF"
@@ -204,22 +145,6 @@ def three_dragon_curve():
     angle = 90
     main(iterations,axiom,rules,angle)
 
-def autosimilars_boxes():
-    axiom = "YFF+YFF+YFF+YFF+"
-    rules = {"Y":"YFFF+YFFF+YFFF+YFFF+YFFF"}
-    iterations = 1 # TOP: 15
-    angle = 90
-    main(iterations,axiom,rules,angle,length=20)
-
-
-def circular_boxes():
-    axiom = "F+"
-    rules = {"F":"F+F+F+F|"}
-    iterations = 40 # TOP: 15
-    angle = 90
-    angle_rule = 10
-    main(iterations,axiom,rules,angle,length=100,angle_rule=angle_rule)
-
 ##########################################################################################3
 def create_l_system(iters, axiom, rules):
     start_string = axiom
@@ -258,11 +183,3 @@ def main(iterations, axiom, rules, angle, length=8, size=2, x_offset=0, y_offset
     draw_l_system(t, inst, angle, length, angle_rule)
     t.hideturtle()
     #wn.exitonclick()
-try:
-    sierpinski_sieve()
-    koch_snowflake()
-    turtle.done()
-except turtle.Terminator:
-    pass
-except _tkinter.TclError:
-    pass

@@ -103,21 +103,22 @@ class LineInstruction(NodeInstruction):
         ttle.forward(self.distance)
 
 class PushInstruction(NodeInstruction):
-    def __init__(self, x:int, y:int):
-        self.x = x
-        self.y = y
+    def __init__(self):
+        pass
 
     def evaluate(self, ttle, depth):
-        stack.append((self.x, self.y))
+        stack.append((ttle.xcor(), ttle.ycor(), ttle.heading()))
 
 class PopInstruction(NodeInstruction):
     def __init__(self):
         pass
 
     def evaluate(self, ttle, depth):
-        x,y = stack.pop()
-        jmp = JumpInstruction(x, y)
-        jmp.evaluate(ttle, depth)
+        pos_x,pos_y,angle = stack.pop()
+        ttle.up()
+        ttle.goto(pos_x, pos_y)
+        ttle.setheading(angle)
+        ttle.down()
 
 class JumpInstruction(NodeInstruction):
     def __init__(self, x:int, y:int):
@@ -150,7 +151,7 @@ class CallRuleInstruction(NodeInstruction):
 
     def evaluate(self, ttle, depth):
         if self.depth == -1: # instruccion recursiva
-            self.rule.evaluate(ttle, depth + 1)
+            self.rule.evaluate(ttle, depth)
         else: # primera llamada a la instruccion
             self.rule.evaluate(ttle, self.depth)
 

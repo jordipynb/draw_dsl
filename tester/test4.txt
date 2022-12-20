@@ -1,0 +1,68 @@
+shape crystal {
+    pencil yellow
+    rule forward {
+        base: line 8
+        call_rule forward
+        call_rule forward
+        left 90
+        call_rule forward
+        left 180
+        call_rule forward
+        left 90
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (3)
+        left 90
+        call_rule forward (3)
+        left 90
+        call_rule forward (3)
+        left 90
+        call_rule forward (3)
+    }
+}
+
+shape box_fractal {
+    pencil red
+    rule forward {
+        base : line 8
+        call_rule forward
+        left 90
+        call_rule forward
+        right 90
+        call_rule forward
+        right 90
+        call_rule forward
+        left 90
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (4)
+        left 90
+        call_rule forward (4)
+        left 90
+        call_rule forward (4)
+        left 90
+        call_rule forward (4)
+    }
+}
+
+draw crystal 300,120
+draw box_fractal 0,-300
+
+shape levy_c_curve {
+    pencil blue
+    rule forward {
+        base : line 8
+        right 45
+        call_rule forward
+        left 90
+        call_rule forward
+        right 45
+    }
+    axiom {
+        call_rule forward (10)
+    }
+}
+
+draw levy_c_curve 300,-250

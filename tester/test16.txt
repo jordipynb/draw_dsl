@@ -1,0 +1,23 @@
+shape tree {
+    pencil green
+    rule F {
+        base : line 10
+        call_rule G
+        push
+        right 45
+        call_rule F
+        pop
+        left 45
+        call_rule F
+    }
+    rule G {
+        base : line 10
+        call_rule G
+        call_rule G
+    }
+    axiom {
+        call_rule F (6)
+    }
+}
+
+draw tree 0,-330

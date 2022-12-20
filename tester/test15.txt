@@ -1,0 +1,22 @@
+shape tree {
+    pencil green
+    rule forward {
+        base : line 8
+        call_rule forward
+        push
+        right 25
+        call_rule forward
+        pop
+        call_rule forward
+        push
+        left 25
+        call_rule forward
+        pop
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (4)
+    }
+}
+
+draw tree 0,-330

@@ -12,7 +12,7 @@ shape squares {
 		iter 35
 	}
 	axiom { 
-		call_rule iter_square (1)
+		call_rule iter_square (2)
 	}
 }
 draw squares -70,30

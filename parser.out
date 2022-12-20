@@ -28,7 +28,7 @@ Rule 22    instruction_base -> RIGHT INT
 Rule 23    instruction_base -> LINE INT
 Rule 24    instruction_base -> JUMP INT COMMA INT
 Rule 25    instruction_base -> NILL
-Rule 26    instruction_base -> PUSH INT COMMA INT
+Rule 26    instruction_base -> PUSH
 Rule 27    instruction_base -> POP
 Rule 28    instruction_base -> CALL_SHAPE ID
 Rule 29    instructions -> instruction instructions
@@ -49,12 +49,12 @@ AXIOM                : 35
 BASE                 : 17 18
 CALL_RULE            : 32 39
 CALL_SHAPE           : 28
-COMMA                : 6 24 26
+COMMA                : 6 24
 C_KEY                : 9 16 18 35
 C_PAR                : 39
 DRAW                 : 6 7 8
 ID                   : 6 7 9 10 16 28 32 39
-INT                  : 6 6 21 22 23 24 24 26 26 33 39
+INT                  : 6 6 21 22 23 24 24 33 39
 ITER                 : 33
 JUMP                 : 24
 LEFT                 : 21
@@ -369,7 +369,7 @@ state 28
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
@@ -417,7 +417,7 @@ state 31
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
@@ -506,9 +506,19 @@ state 38
 
 state 39
 
-    (26) instruction_base -> PUSH . INT COMMA INT
+    (26) instruction_base -> PUSH .
 
-    INT             shift and go to state 51
+    CALL_RULE       reduce using rule 26 (instruction_base -> PUSH .)
+    LEFT            reduce using rule 26 (instruction_base -> PUSH .)
+    RIGHT           reduce using rule 26 (instruction_base -> PUSH .)
+    LINE            reduce using rule 26 (instruction_base -> PUSH .)
+    JUMP            reduce using rule 26 (instruction_base -> PUSH .)
+    NILL            reduce using rule 26 (instruction_base -> PUSH .)
+    PUSH            reduce using rule 26 (instruction_base -> PUSH .)
+    POP             reduce using rule 26 (instruction_base -> PUSH .)
+    CALL_SHAPE      reduce using rule 26 (instruction_base -> PUSH .)
+    C_KEY           reduce using rule 26 (instruction_base -> PUSH .)
+    ITER            reduce using rule 26 (instruction_base -> PUSH .)
 
 
 state 40
@@ -532,7 +542,7 @@ state 41
 
     (28) instruction_base -> CALL_SHAPE . ID
 
-    ID              shift and go to state 52
+    ID              shift and go to state 51
 
 
 state 42
@@ -547,11 +557,11 @@ state 42
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
-    CALL_RULE       shift and go to state 56
+    CALL_RULE       shift and go to state 55
     LEFT            shift and go to state 34
     RIGHT           shift and go to state 35
     LINE            shift and go to state 36
@@ -561,17 +571,17 @@ state 42
     POP             shift and go to state 40
     CALL_SHAPE      shift and go to state 41
 
-    instructions                   shift and go to state 53
-    instruction                    shift and go to state 54
-    instruction_base               shift and go to state 55
+    instructions                   shift and go to state 52
+    instruction                    shift and go to state 53
+    instruction_base               shift and go to state 54
 
 state 43
 
     (17) base -> BASE . TWO_POINT instruction_base
     (18) base -> BASE . O_KEY instructions_base C_KEY
 
-    TWO_POINT       shift and go to state 57
-    O_KEY           shift and go to state 58
+    TWO_POINT       shift and go to state 56
+    O_KEY           shift and go to state 57
 
 
 state 44
@@ -592,7 +602,7 @@ state 46
 
     (39) instruction_axiom -> CALL_RULE ID . O_PAR INT C_PAR
 
-    O_PAR           shift and go to state 59
+    O_PAR           shift and go to state 58
 
 
 state 47
@@ -650,17 +660,10 @@ state 50
 
     (24) instruction_base -> JUMP INT . COMMA INT
 
-    COMMA           shift and go to state 60
+    COMMA           shift and go to state 59
 
 
 state 51
-
-    (26) instruction_base -> PUSH INT . COMMA INT
-
-    COMMA           shift and go to state 61
-
-
-state 52
 
     (28) instruction_base -> CALL_SHAPE ID .
 
@@ -677,18 +680,18 @@ state 52
     ITER            reduce using rule 28 (instruction_base -> CALL_SHAPE ID .)
 
 
-state 53
+state 52
 
     (16) rule -> RULE ID O_KEY base instructions . loop C_KEY
     (33) loop -> . ITER INT
     (34) loop -> .
 
-    ITER            shift and go to state 63
+    ITER            shift and go to state 61
     C_KEY           reduce using rule 34 (loop -> .)
 
-    loop                           shift and go to state 62
+    loop                           shift and go to state 60
 
-state 54
+state 53
 
     (29) instructions -> instruction . instructions
     (30) instructions -> instruction .
@@ -701,13 +704,13 @@ state 54
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
     ITER            reduce using rule 30 (instructions -> instruction .)
     C_KEY           reduce using rule 30 (instructions -> instruction .)
-    CALL_RULE       shift and go to state 56
+    CALL_RULE       shift and go to state 55
     LEFT            shift and go to state 34
     RIGHT           shift and go to state 35
     LINE            shift and go to state 36
@@ -717,11 +720,11 @@ state 54
     POP             shift and go to state 40
     CALL_SHAPE      shift and go to state 41
 
-    instruction                    shift and go to state 54
-    instructions                   shift and go to state 64
-    instruction_base               shift and go to state 55
+    instruction                    shift and go to state 53
+    instructions                   shift and go to state 62
+    instruction_base               shift and go to state 54
 
-state 55
+state 54
 
     (31) instruction -> instruction_base .
 
@@ -738,14 +741,14 @@ state 55
     C_KEY           reduce using rule 31 (instruction -> instruction_base .)
 
 
-state 56
+state 55
 
     (32) instruction -> CALL_RULE . ID
 
-    ID              shift and go to state 65
+    ID              shift and go to state 63
 
 
-state 57
+state 56
 
     (17) base -> BASE TWO_POINT . instruction_base
     (21) instruction_base -> . LEFT INT
@@ -753,7 +756,7 @@ state 57
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
@@ -766,9 +769,9 @@ state 57
     POP             shift and go to state 40
     CALL_SHAPE      shift and go to state 41
 
-    instruction_base               shift and go to state 66
+    instruction_base               shift and go to state 64
 
-state 58
+state 57
 
     (18) base -> BASE O_KEY . instructions_base C_KEY
     (19) instructions_base -> . instruction_base instructions_base
@@ -778,7 +781,7 @@ state 58
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
@@ -791,45 +794,38 @@ state 58
     POP             shift and go to state 40
     CALL_SHAPE      shift and go to state 41
 
-    instructions_base              shift and go to state 67
-    instruction_base               shift and go to state 68
+    instructions_base              shift and go to state 65
+    instruction_base               shift and go to state 66
 
-state 59
+state 58
 
     (39) instruction_axiom -> CALL_RULE ID O_PAR . INT C_PAR
 
-    INT             shift and go to state 69
+    INT             shift and go to state 67
+
+
+state 59
+
+    (24) instruction_base -> JUMP INT COMMA . INT
+
+    INT             shift and go to state 68
 
 
 state 60
 
-    (24) instruction_base -> JUMP INT COMMA . INT
+    (16) rule -> RULE ID O_KEY base instructions loop . C_KEY
 
-    INT             shift and go to state 70
+    C_KEY           shift and go to state 69
 
 
 state 61
 
-    (26) instruction_base -> PUSH INT COMMA . INT
+    (33) loop -> ITER . INT
 
-    INT             shift and go to state 71
+    INT             shift and go to state 70
 
 
 state 62
-
-    (16) rule -> RULE ID O_KEY base instructions loop . C_KEY
-
-    C_KEY           shift and go to state 72
-
-
-state 63
-
-    (33) loop -> ITER . INT
-
-    INT             shift and go to state 73
-
-
-state 64
 
     (29) instructions -> instruction instructions .
 
@@ -837,7 +833,7 @@ state 64
     C_KEY           reduce using rule 29 (instructions -> instruction instructions .)
 
 
-state 65
+state 63
 
     (32) instruction -> CALL_RULE ID .
 
@@ -854,7 +850,7 @@ state 65
     C_KEY           reduce using rule 32 (instruction -> CALL_RULE ID .)
 
 
-state 66
+state 64
 
     (17) base -> BASE TWO_POINT instruction_base .
 
@@ -869,14 +865,14 @@ state 66
     CALL_SHAPE      reduce using rule 17 (base -> BASE TWO_POINT instruction_base .)
 
 
-state 67
+state 65
 
     (18) base -> BASE O_KEY instructions_base . C_KEY
 
-    C_KEY           shift and go to state 74
+    C_KEY           shift and go to state 71
 
 
-state 68
+state 66
 
     (19) instructions_base -> instruction_base . instructions_base
     (20) instructions_base -> instruction_base .
@@ -887,7 +883,7 @@ state 68
     (23) instruction_base -> . LINE INT
     (24) instruction_base -> . JUMP INT COMMA INT
     (25) instruction_base -> . NILL
-    (26) instruction_base -> . PUSH INT COMMA INT
+    (26) instruction_base -> . PUSH
     (27) instruction_base -> . POP
     (28) instruction_base -> . CALL_SHAPE ID
 
@@ -901,17 +897,17 @@ state 68
     POP             shift and go to state 40
     CALL_SHAPE      shift and go to state 41
 
-    instruction_base               shift and go to state 68
-    instructions_base              shift and go to state 75
+    instruction_base               shift and go to state 66
+    instructions_base              shift and go to state 72
 
-state 69
+state 67
 
     (39) instruction_axiom -> CALL_RULE ID O_PAR INT . C_PAR
 
-    C_PAR           shift and go to state 76
+    C_PAR           shift and go to state 73
 
 
-state 70
+state 68
 
     (24) instruction_base -> JUMP INT COMMA INT .
 
@@ -928,24 +924,7 @@ state 70
     ITER            reduce using rule 24 (instruction_base -> JUMP INT COMMA INT .)
 
 
-state 71
-
-    (26) instruction_base -> PUSH INT COMMA INT .
-
-    CALL_RULE       reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    LEFT            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    RIGHT           reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    LINE            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    JUMP            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    NILL            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    PUSH            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    POP             reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    CALL_SHAPE      reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    C_KEY           reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-    ITER            reduce using rule 26 (instruction_base -> PUSH INT COMMA INT .)
-
-
-state 72
+state 69
 
     (16) rule -> RULE ID O_KEY base instructions loop C_KEY .
 
@@ -953,14 +932,14 @@ state 72
     AXIOM           reduce using rule 16 (rule -> RULE ID O_KEY base instructions loop C_KEY .)
 
 
-state 73
+state 70
 
     (33) loop -> ITER INT .
 
     C_KEY           reduce using rule 33 (loop -> ITER INT .)
 
 
-state 74
+state 71
 
     (18) base -> BASE O_KEY instructions_base C_KEY .
 
@@ -975,14 +954,14 @@ state 74
     CALL_SHAPE      reduce using rule 18 (base -> BASE O_KEY instructions_base C_KEY .)
 
 
-state 75
+state 72
 
     (19) instructions_base -> instruction_base instructions_base .
 
     C_KEY           reduce using rule 19 (instructions_base -> instruction_base instructions_base .)
 
 
-state 76
+state 73
 
     (39) instruction_axiom -> CALL_RULE ID O_PAR INT C_PAR .
 

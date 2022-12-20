@@ -119,7 +119,7 @@ def p_instruction_base(p):
 						 | LINE  INT   
 						 | JUMP  INT COMMA INT      
 						 | NILL  
-						 | PUSH  INT COMMA INT 		
+						 | PUSH		
 						 | POP 
 						 | CALL_SHAPE ID'''
 	if p[1] == 'left':
@@ -139,7 +139,7 @@ def p_instruction_base(p):
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser positivo!')
 	elif p[1] == 'jump': p[0] = JumpInstruction(p[2], p[4])
 	elif p[1] == 'nill': p[0] = Nill()
-	elif p[1] == 'push': p[0] = PushInstruction(p[2], p[4])
+	elif p[1] == 'push': p[0] = PushInstruction()
 	elif p[1] == 'pop':  p[0] = PopInstruction()
 	else: # es un call_shape
 		for shape in shape_scope:

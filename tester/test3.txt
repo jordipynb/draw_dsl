@@ -1,0 +1,55 @@
+
+shape quadratic_koch_island {
+    pencil red
+    rule forward {
+        base: line 8
+        call_rule forward
+        left 90
+        call_rule forward
+        right 90
+        call_rule forward
+        right 90
+        call_rule forward
+        call_rule forward
+        call_rule forward
+        left 90
+        call_rule forward
+        left 90
+        call_rule forward
+        right 90
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (2)
+        left 90
+        call_rule forward (2)
+        left 90
+        call_rule forward (2)
+        left 90
+        call_rule forward (2)
+    }
+}
+
+shape quadratic_snowflake {
+    pencil magenta
+    rule forward {
+        base : line 8
+        call_rule forward
+        left 90
+        call_rule forward
+        right 90
+        call_rule forward
+        right 90
+        call_rule forward
+        left 90
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (4)
+        left 180
+        call_rule forward (4)
+    }
+}
+
+draw quadratic_koch_island 200,150
+draw quadratic_snowflake -150,-300

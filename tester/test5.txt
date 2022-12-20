@@ -1,0 +1,29 @@
+shape sierpinski_arrowhead {
+    pencil green
+    rule X {
+        base : nill
+        call_rule Y
+        line 8
+        right 60
+        call_rule X
+        line 8
+        right 60
+        call_rule Y
+    }
+    rule Y {
+        base : nill
+        call_rule X
+        line 8
+        left 60
+        call_rule Y
+        line 8
+        left 60
+        call_rule X
+    }
+    axiom {
+        call_rule Y (6)
+        line 8
+    }
+}
+
+draw sierpinski_arrowhead 0, -200
