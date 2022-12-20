@@ -1,50 +1,10 @@
 from grammar import *
 
-input = '''shape triangles {
-	pencil red
-	fill yellow
-	axiom { 
-		right 90 
-		line 400 
-		left 90
-		line 300 
-		left 126
-		line 500 
-	}
-	rule first {
-		base : nill 
-		line 300
-	}
-	rule fitness {
-		base : nill
-		line 300
-		call_rule fitness
-	}
-}
-shape triangle {
-	axiom { 
-		right 90
-		line 400
-		left 90
-		line 300
-		left 126
-		line 500
-		call_shape triangles
-		call_rule follow
-	}
-	rule follow {
-		base { 
-			line 400
-			left 90
-			line 300
-		}
-		line 300
-	}
-	depth 6
-}
-draw triangles 1 , 1
-draw nill
-draw triangle 40 , 40'''
+input1 = open(f"tester/test0.txt").read() # DONE
+input2 = open(f"tester/test1.txt").read() # DONE
+input3 = open(f"tester/test2.txt").read() # DONE
+
+input = input1 + '\n' + input2 + '\n' + input3
 
 ast = parser.parse(input,lexer=lexer)
 if ast:

@@ -11,11 +11,9 @@ draws:list[Draw] = []
 # Definición de la gramática
 def p_scene(p):
 	'''scene : draws_instruction'''
-	p[0] = Scene(draws)
-	global shape_scope
-	global locals_rules
+	p[0] = Scene(draws, errors_list)
+	global shape_scope, locals_rules
 	del shape_scope, locals_rules
-
 
 def p_draws_instruction(p):
 	'''draws_instruction : draws_instruction shape
@@ -45,11 +43,10 @@ def p_draw(p):
 			p[0] = Draw(shape,p[3],p[5]) if len(p) == 6 else Draw(shape)
 			return
 	token = p.slice[2]
-	print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
-	#p_error(token) IDEA SIMILAR
+	print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 
 def p_shape(p):
-	'''shape : SHAPE ID O_KEY pencil fill axiom'''
+	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
 	if len(shape_scope) > 0:
 		for shape in shape_scope:
 			if shape.name == p[2]:
@@ -58,7 +55,7 @@ def p_shape(p):
 				return
 	global locals_rules
 	locals_rules = []
-	p[0] = Shape(p[2],p[4],p[5],p[6])
+	p[0] = Shape(p[2],p[4],p[6])
 
 colors = ['red','blue','yellow','green','magenta'] 
 r'\#[0-9a-f]{6}'
@@ -70,63 +67,30 @@ def p_pencil(p):
 		p[0] = p[2]
 	else:
 		p[0] = 'black'
-			
-# Comprobar q el ID es un color
-def p_fill(p):
-	'''fill : FILL ID
-			| '''
-	if len(p) > 2:
-		p[0] = p[2]
-	else:
-		p[0] = 'white'
 
-def p_axiom(p):
-	'''axiom  : AXIOM O_KEY instructions C_KEY rules'''
-	depth = p[5].pop()
-	p[0] = Axiom(p[3], p[5], depth)
-
-
-def p_instructions(p):
-	'''instructions : instruction instructions
-				    | instruction '''
-	if len(p)==2:
-		p[0] = [p[1]]
-	else:
-		p[0] = [p[1],*p[2]]
-
-def p_instruction(p):
-	'''instruction  : instruction_base
-	                | CALL_SHAPE ID
-	                | CALL_RULE ID'''
-	# Corregir
-	if p[1] == 'call_rule':
-		for rule in locals_rules:
-			if rule and rule.name == p[2]: 
-				p[0] = CallRuleInstruction(rule)
-				return
-		token = p.slice[2]
-		p[0] = CallRuleInstruction(token.value, token.lineno, find_column(token))
-	elif p[1] == 'call_shape':
-		for shape in shape_scope:
-			if shape and shape.name == p[2]: 
-				p[0] = CallShapeInstruction(shape)
-				return
-		token = p.slice[2]
-		print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
-	else:
-		p[0] = p[1]
-
+def p_rules_locals(p):
+	'''rules_locals : rules
+	                | '''
+	if len(p) == 2:
+		for i,rule in enumerate(locals_rules):
+			for j, instuction in enumerate(rule.instructions):
+				if isinstance(instuction, CallableRule):
+					value = instuction.search_rule(locals_rules)
+					if isinstance(value, LexToken):
+						print(f'SemanticError: "{value.value}" en la línea {value.lineno}, columna {find_column(value)} no es una regla definida!')
+					else:
+						locals_rules[i].instructions[j] = value
 
 def p_rules(p):
 	'''rules  : rule rules
-	          | depth'''
+	          | rule'''
 	if len(p) == 2:
 		p[0] = [p[1]]
 	else:
 		p[0] = [p[1],*p[2]]
 
 def p_rule(p):
-	'''rule  : RULE ID O_KEY base instructions loop'''
+	'''rule  : RULE ID O_KEY base instructions loop C_KEY'''
 	for rule in locals_rules:
 		if rule.name == p[2]:
 			token = p.slice[2]
@@ -135,10 +99,11 @@ def p_rule(p):
 	p[0] = Rule(p[2], p[4], p[5], p[6])
 	locals_rules.append(p[0])
 
-def p_base(p):
+def p_base(p):	
 	'''base : BASE TWO_POINT instruction_base
 	        | BASE O_KEY instructions_base C_KEY'''
-	p[0] = p[3]
+	if p[2] == ':': p[0] = [p[3]]
+	else : p[0] = p[3]
 
 def p_instructions_base(p):
 	'''instructions_base : instruction_base instructions_base
@@ -155,57 +120,95 @@ def p_instruction_base(p):
 						 | JUMP  INT COMMA INT      
 						 | NILL  
 						 | PUSH  INT COMMA INT 		
-						 | POP '''
+						 | POP 
+						 | CALL_SHAPE ID'''
 	if p[1] == 'left':
-		if p[2] < 0 or p[2] > 180:
+		if 0 <= p[2] and p[2] <= 180: p[0] = LeftInstruction(p[2])
+		else:
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe estar en rango [0, 180]')
-			return
-		p[0] = LeftInstruction(p[2])
 	elif p[1] == 'right':
-		if p[2] < 0 or p[2] > 180:
+		if 0 <= p[2] and p[2] <= 180: p[0] = RightInstruction(p[2])
+		else:
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe estar en rango [0, 180]')
-			return
-		p[0] = RightInstruction(p[2])
 	elif p[1] == 'line':
-		if p[2] < 1:
+		if p[2] > 0: p[0] = LineInstruction(p[2])
+		else:	
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser positivo!')
-			return
-		p[0] = LineInstruction(p[2])
-	elif p[1] == 'jump':
-		p[0] = JumpInstruction(p[2], p[4])
-	elif p[1] == 'nill':
-		p[0] = Nill()
-	elif p[1] == 'push':
-		p[0] = PushInstruction(p[2], p[4])
-	elif p[1] == 'pop':
-		p[0] = PopInstruction()
+	elif p[1] == 'jump': p[0] = JumpInstruction(p[2], p[4])
+	elif p[1] == 'nill': p[0] = Nill()
+	elif p[1] == 'push': p[0] = PushInstruction(p[2], p[4])
+	elif p[1] == 'pop':  p[0] = PopInstruction()
+	else: # es un call_shape
+		for shape in shape_scope:
+			if shape and shape.name == p[2]: 
+				p[0] = CallShapeInstruction(shape)
+				break
+		else:
+			token = p.slice[2]
+			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+
+def p_instructions(p):
+	'''instructions : instruction instructions
+				    | instruction '''
+	if len(p)==2:
+		p[0] = [p[1]]
+	else:
+		p[0] = [p[1],*p[2]]
+
+def p_instruction(p):
+	'''instruction  : instruction_base
+	                | CALL_RULE ID'''
+	if p[1] == 'call_rule':
+		for rule in locals_rules:
+			if rule and rule.name == p[2]: 
+				p[0] = CallRuleInstruction(rule)
+				break
+		else: p[0] = CallableRule(p.slice[2])
+	else: # es un instruction_base
+		p[0] = p[1]
 
 def p_loop(p):
-	'''loop : ITER INT C_KEY
-			| C_KEY'''
-	if len(p)==2:
-		p[0] = 0
-		return
-	elif p[2] < 0:
-		token = p.slice[2]
-		print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
-		return
-	p[0] = p[2]
+	'''loop : ITER INT
+			| '''
+	if len(p)==3:
+		if p[2] < 0:
+			token = p.slice[2]
+			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
+		else: p[0] = p[2]
+	else: p[0] = 0
 
-def p_depth(p):
-	'''depth  : DEPTH INT C_KEY
-			  | C_KEY'''
+def p_axiom(p):
+	'''axiom  : AXIOM O_KEY instructions_axiom C_KEY'''
+	p[0] = Axiom(p[3])
+
+def p_instructions_axiom(p):
+	'''instructions_axiom : instruction_axiom instructions_axiom
+	                      | instruction_axiom'''
 	if len(p)==2:
-		p[0] = 0
-		return
-	elif p[2] < 0:
-		token = p.slice[2]
-		print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
-		return
-	p[0] = p[2]
+		p[0] = [p[1]]
+	else:
+		p[0] = [p[1],*p[2]]
+
+def p_instruction_axiom(p):
+	'''instruction_axiom  : instruction_base
+	                      | CALL_RULE ID O_PAR INT C_PAR'''
+	if p[1] == 'call_rule':
+		if p[4] < 0:
+			token = p.slice[4]
+			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
+		else:
+			for rule in locals_rules:
+				if rule and rule.name == p[2]: 
+					p[0] = CallRuleInstruction(rule, depth=p[4])
+					break
+			else:
+				token = p.slice[2]
+				print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una regla definida!')
+	else: # es un instruction_base
+		p[0] = p[1]
 
 def p_error(p):
 	if p:

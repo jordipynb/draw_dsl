@@ -5,7 +5,6 @@ reserved = {
     'shape'      : 'SHAPE',
     'draw'       : 'DRAW',
     'pencil'     : 'PENCIL',
-    'fill'       : 'FILL',
     'left'       : 'LEFT',
     'right'      : 'RIGHT',
     'line'       : 'LINE',
@@ -14,7 +13,6 @@ reserved = {
     'base'       : 'BASE',
     'nill'       : 'NILL',
     'iter'       : 'ITER',
-    'depth'      : 'DEPTH',
     'axiom'      : 'AXIOM',
     'rule'       : 'RULE',
     'jump'       : 'JUMP',
@@ -22,11 +20,13 @@ reserved = {
     'pop'        : 'POP',
  }
 
-tokens  = ['O_KEY', 'C_KEY', 'INT', 'TWO_POINT', 'COMMA', 'ID'] + list(reserved.values())
+tokens  = ['O_KEY', 'C_KEY', 'O_PAR', 'C_PAR','INT', 'TWO_POINT', 'COMMA', 'ID'] + list(reserved.values())
 
 # Regular expression rules for simple tokens
 t_O_KEY       = r'\{'
 t_C_KEY       = r'\}'
+t_O_PAR       = r'\('
+t_C_PAR       = r'\)'
 t_TWO_POINT   = r':'
 t_COMMA       = r','
 

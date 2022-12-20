@@ -1,0 +1,27 @@
+shape triangle {
+	pencil red
+	axiom { 
+		right 90
+		line 200
+		left 90
+		line 100
+		left 117
+		line 220
+	}
+}
+shape square {
+	pencil blue
+	axiom { 
+		line 200
+		right 90
+		line 200
+		right 90
+		line 200
+		right 90
+		line 200 
+	}
+}
+draw nill
+draw triangle 25 , 25
+draw square -350 , -350
+draw nill

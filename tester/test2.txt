@@ -1,0 +1,21 @@
+shape koch_snowflake {
+    pencil magenta
+    rule forward {
+        base : line 10
+        call_rule forward
+        left 60
+        call_rule forward
+        right 120
+        call_rule forward
+        left 60
+        call_rule forward
+    }
+    axiom {
+        call_rule forward (3)
+        right 120
+        call_rule forward (3)
+        right 120
+        call_rule forward (3)
+    }
+}
+draw koch_snowflake 300,-200

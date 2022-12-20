@@ -1,0 +1,18 @@
+shape squares {
+	rule square_draw {
+		base: nill
+		line 50
+		left 90
+		iter 3
+	}
+	rule iter_square {
+		base: nill
+		call_rule square_draw
+		right 10
+		iter 35
+	}
+	axiom { 
+		call_rule iter_square (1)
+	}
+}
+draw squares -70,30
