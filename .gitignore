@@ -1,6 +1,10 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,pycharm,visualstudio,visualstudiocode,vim,virtualenv
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,pycharm,visualstudio,visualstudiocode,vim,virtualenv
 
+### MY STUFF###
+parser/
+parser/*
+
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839

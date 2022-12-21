@@ -1,6 +1,14 @@
 from ply import yacc as yacc
 from lexer import *
 from utils import *
+import os
+import errno
+
+try:
+    os.mkdir('parser')
+except OSError as e:
+    if e.errno != errno.EEXIST:
+        raise
 
 lexer = lex.lex()
 errors_list = []
@@ -238,4 +246,4 @@ def find_column(t):
 #          ES XQ HUBO ERRORES DE SYNTAXIS Y EL LOS LANZA SOLO
 #   NO  -> CONTINUAR CON EL INPUT HASTA Q VUELVA A PONER COMANDO DE PARADA
 #   SI HAY ERRORES RUNTIME NO ES NUESTRO PROBLEMA PERO PODRIAMOS PONERLOS NOSOTROS POR SI JODE LA PINTURA                          
-parser = yacc.yacc()
+parser = yacc.yacc(outputdir='./parser/')
