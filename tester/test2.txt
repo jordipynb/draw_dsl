@@ -1,8 +1,8 @@
 shape koch_snowflake {
     pencil magenta
-    rule forward {
+    rule forward (p) {
         base : line 10
-        call_rule forward
+        call_rule forward (p-1)
         left 60
         call_rule forward
         right 120

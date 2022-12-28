@@ -1,5 +1,5 @@
 from ply import lex as lex
-
+import math
 # List of token names.   This is always required
 reserved = {
     'shape'      : 'SHAPE',
@@ -10,31 +10,54 @@ reserved = {
     'line'       : 'LINE',
     'call_shape' : 'CALL_SHAPE',
     'call_rule'  : 'CALL_RULE',
-    'base'       : 'BASE',
     'nill'       : 'NILL',
-    'iter'       : 'ITER',
     'axiom'      : 'AXIOM',
     'rule'       : 'RULE',
     'jump'       : 'JUMP',
     'push'       : 'PUSH',
     'pop'        : 'POP',
+    'while'      : 'WHILE',
+    'if'         : 'IF',
+    'not'        : 'NOT',
+    'else'       : 'ELSE',
+    'and'        : 'AND',
+    'or'         : 'OR',
+    'true'       :'TRUE',
+    'false'      :'FALSE',
+    'get_x'      :'GET_X',
+    'set_x'      :'SET_X',
+    'get_y'      :'GET_Y',
+    'set_y'      :'SET_Y',
+    'set_pencil' :'SET_PENCIL',
+    'break'      :'BREAK'
  }
+functions={'sin':lambda x: math.sin(x),'cos': lambda x : math.cos(x)}
 
-tokens  = ['O_KEY', 'C_KEY', 'O_PAR', 'C_PAR','INT', 'TWO_POINT', 'COMMA', 'ID'] + list(reserved.values())
+constants={'pi':math.pi,'e':math.e}
+
+tokens  = ['O_KEY', 'C_KEY', 'O_PAR', 'FUNC', 'C_PAR','FLOAT', 'COMMA', 'ID','SUM','SUB','DIV','MUL','GREATER','MENOR','EQUAL','EQUAL_EQUAL','POW'] + list(reserved.values())
 
 # Regular expression rules for simple tokens
 t_O_KEY       = r'\{'
 t_C_KEY       = r'\}'
 t_O_PAR       = r'\('
 t_C_PAR       = r'\)'
-t_TWO_POINT   = r':'
 t_COMMA       = r','
+t_SUM         = r'\+'
+t_SUB         = r'-'
+t_DIV         = r'/'
+t_MUL         = r'\*'
+t_GREATER     = r'>'
+t_MENOR       = r'<'
+t_EQUAL       = r'='
+t_EQUAL_EQUAL = r'=='
+t_POW         = r'\^'
 
 # A regular expression rule with some action code
-def t_INT(t):
-    r'-\d+ | \d+'
+def t_FLOAT(t):
+    r'\d+(\.\d+)?'
     try:
-        t.value = int(t.value)
+        t.value = float(t.value)
     except:
         print(f'Error en línea {t.lineno}!! Token: {t.value} debe ser un entero') 
         t.value = 0
@@ -43,6 +66,10 @@ def t_INT(t):
 def t_ID(t):
     r'[a-zA-Z][a-zA-Z_0-9]*'
     t.type = reserved.get(t.value,'ID')# Check for reserved words
+    if t.type== 'ID' and (t.value == 'sin' or t.value == 'cos'):
+        t.type = 'FUNC'
+    if t.type== 'ID' and (t.value == 'e' or t.value == 'pi'):
+        t.type = 'FLOAT'
     return t
 
 # A string containing ignored characters (spaces, tabs and comment)

@@ -1,5 +1,4 @@
 from ply import yacc as yacc
-from lexer import *
 from utils import *
 import os
 import errno
@@ -10,13 +9,11 @@ except OSError as e:
     if e.errno != errno.EEXIST:
         raise
 
-lexer = lex.lex()
 errors_list = []
 shape_scope:list[Shape] = []
 locals_rules:list[Rule] = []
 draws:list[Draw] = []
 
-# Definición de la gramática
 def p_scene(p):
 	'''scene : draws_instruction'''
 	p[0] = Scene(draws, errors_list)
@@ -40,7 +37,7 @@ def p_draws_instruction(p):
 			draws.append(p[2])
 
 def p_draw(p):
-	'''draw : DRAW ID INT COMMA INT
+	'''draw : DRAW ID number COMMA number
 	        | DRAW ID
 			| DRAW NILL'''
 	if p[2] == 'nill':
@@ -48,10 +45,10 @@ def p_draw(p):
 		return
 	for shape in shape_scope:
 		if shape and shape.name == p[2]: 
-			p[0] = Draw(shape,p[3],p[5]) if len(p) == 6 else Draw(shape)
+			p[0] = Draw(shape,p[3],p[5]) if len(p) == 6 else Draw(shape, Value(0), Value(0))
 			return
 	token = p.slice[2]
-	print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+	print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 
 def p_shape(p):
 	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
@@ -63,11 +60,8 @@ def p_shape(p):
 				return
 	global locals_rules
 	locals_rules = []
-	p[0] = Shape(p[2],p[4],p[6])
+	p[0] = Shape(p[2],p[4],p[5],p[6])
 
-colors = ['red','blue','yellow','green','magenta'] 
-r'\#[0-9a-f]{6}'
-# Comprobar q el ID es un color
 def p_pencil(p):
 	'''pencil : PENCIL ID
 			  | '''
@@ -80,76 +74,74 @@ def p_rules_locals(p):
 	'''rules_locals : rules
 	                | '''
 	if len(p) == 2:
-		for i,rule in enumerate(locals_rules):
-			for j, instuction in enumerate(rule.instructions):
-				if isinstance(instuction, CallableRule):
-					value = instuction.search_rule(locals_rules)
-					if isinstance(value, LexToken):
-						print(f'SemanticError: "{value.value}" en la línea {value.lineno}, columna {find_column(value)} no es una regla definida!')
-					else:
-						locals_rules[i].instructions[j] = value
+		p[0] = p[1]
 
 def p_rules(p):
-	'''rules  : rule rules
+	'''rules  : rules rule
 	          | rule'''
 	if len(p) == 2:
 		p[0] = [p[1]]
 	else:
-		p[0] = [p[1],*p[2]]
+		p[0] = [*p[1],p[2]]
 
 def p_rule(p):
-	'''rule  : RULE ID O_KEY base instructions loop C_KEY'''
+	'''rule  : RULE ID O_PAR ID C_PAR O_KEY instructions C_KEY'''
 	for rule in locals_rules:
 		if rule.name == p[2]:
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una regla')
 			return
-	p[0] = Rule(p[2], p[4], p[5], p[6])
+	p[0] = Rule(p[2], p[4], p[7])
 	locals_rules.append(p[0])
 
-def p_base(p):	
-	'''base : BASE TWO_POINT instruction_base
-	        | BASE O_KEY instructions_base C_KEY'''
-	if p[2] == ':': p[0] = [p[3]]
-	else : p[0] = p[3]
-
-def p_instructions_base(p):
-	'''instructions_base : instruction_base instructions_base
-				    	 | instruction_base '''
+def p_instructions(p):
+	'''instructions : instructions instruction
+				    | instruction '''
 	if len(p)==2:
 		p[0] = [p[1]]
 	else:
-		p[0] = [p[1],*p[2]]
+		p[0] = [*p[1],p[2]]
+
+def p_instruction(p):
+	'''instruction	:	instruction_base
+					|	IF conditions O_KEY instructions C_KEY			
+					|	IF conditions O_KEY instructions C_KEY ELSE O_KEY instructions C_KEY
+					|	WHILE conditions O_KEY loop_instructions C_KEY'''
+	if len(p) == 2: p[0] = p[1]
+	else: 
+		if p[1] == 'if':
+			if len(p) > 6: p[0] = If(p[2],p[4],p[8])
+			else:  p[0] = If(p[2],p[4])
+		if p[1] == 'while': p[0] = While(p[2],p[4])
 
 def p_instruction_base(p):
-	'''instruction_base  : LEFT  INT   
-						 | RIGHT INT     
-						 | LINE  INT   
-						 | JUMP  INT COMMA INT      
-						 | NILL  
-						 | PUSH		
-						 | POP 
-						 | CALL_SHAPE ID'''
+	'''instruction_base	: LEFT  expression   
+						| RIGHT expression     
+						| LINE  expression   
+						| JUMP  expression COMMA expression      
+						| NILL  
+						| PUSH		
+						| POP 
+						| CALL_SHAPE ID
+						| CALL_RULE ID O_PAR expression C_PAR
+						| ID EQUAL expression
+						| ID EQUAL condition
+						| ID EQUAL GET_X
+						| ID EQUAL GET_Y
+						| SET_X expression 
+						| SET_Y expression 
+						| SET_PENCIL ID '''
 	if p[1] == 'left':
-		if 0 <= p[2] and p[2] <= 180: p[0] = LeftInstruction(p[2])
-		else:
-			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe estar en rango [0, 180]')
+		p[0] = LeftInstruction(p[2])
 	elif p[1] == 'right':
-		if 0 <= p[2] and p[2] <= 180: p[0] = RightInstruction(p[2])
-		else:
-			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe estar en rango [0, 180]')
+		p[0] = RightInstruction(p[2])
 	elif p[1] == 'line':
-		if p[2] > 0: p[0] = LineInstruction(p[2])
-		else:	
-			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser positivo!')
+		p[0] = LineInstruction(p[2])
 	elif p[1] == 'jump': p[0] = JumpInstruction(p[2], p[4])
 	elif p[1] == 'nill': p[0] = Nill()
 	elif p[1] == 'push': p[0] = PushInstruction()
 	elif p[1] == 'pop':  p[0] = PopInstruction()
-	else: # es un call_shape
+	elif p[1] == 'call_shape': 
 		for shape in shape_scope:
 			if shape and shape.name == p[2]: 
 				p[0] = CallShapeInstruction(shape)
@@ -157,66 +149,110 @@ def p_instruction_base(p):
 		else:
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+	elif p[1] == 'set_x': p[0] = Set_X(p[2])
+	elif p[1] == 'set_y': p[0] = Set_Y(p[2])
+	elif p[1] == 'set_pencil': p[0] = SetPencil(p[2])
+	elif p[3] == 'get_x': p[0] = Get_X(p[1])
+	elif p[3] == 'get_y': p[0] = Get_Y(p[1])
+	elif p[1] == 'call_rule': p[0] = CallRuleInstruction(p.slice[2],p[4])
+	else: p[0] = Assign(p[1],p[3])
 
-def p_instructions(p):
-	'''instructions : instruction instructions
-				    | instruction '''
+def p_loop_instruction(p):
+	'''loop_instruction		: instruction_base
+							| BREAK
+							| IF conditions O_KEY loop_instructions  C_KEY
+							| IF conditions O_KEY loop_instructions C_KEY ELSE O_KEY loop_instructions C_KEY'''
+    
+	if p[1] == 'if':
+		if len(p) > 6: p[0] = If(p[2],p[4],p[8])
+		else:  p[0] = If(p[2],p[4])
+	if p[1] == 'break': p[0] = Break()
+	else: p[0] = p[1]
+
+def p_loop_instructions(p):
+	'''loop_instructions 	: loop_instructions loop_instruction
+				    		| loop_instruction '''
 	if len(p)==2:
 		p[0] = [p[1]]
 	else:
-		p[0] = [p[1],*p[2]]
+		p[0] = [*p[1],p[2]]	
 
-def p_instruction(p):
-	'''instruction  : instruction_base
-	                | CALL_RULE ID'''
-	if p[1] == 'call_rule':
-		for rule in locals_rules:
-			if rule and rule.name == p[2]: 
-				p[0] = CallRuleInstruction(rule)
-				break
-		else: p[0] = CallableRule(p.slice[2])
-	else: # es un instruction_base
-		p[0] = p[1]
+def p_condition(p):
+	'''condition    : expression GREATER expression
+					| expression MENOR expression
+					| expression EQUAL_EQUAL expression
+					| FALSE
+					| TRUE
+					| NOT condition'''
+	if p[1] == 'true': p[0] = TrueCondition()
+	elif p[1] == 'false': p[0] = FalseCondition()
+	elif p[2] == '>' : p[0] = GreaterCondition(p[1],p[3])
+	elif p[2] == '<' : p[0] = MenorCondition(p[1],p[3])
+	elif p[2] == '==': p[0] = EqualCondition(p[1],p[3])
+	else: p[0] = NotOperator(p[2])
 
-def p_loop(p):
-	'''loop : ITER INT
-			| '''
-	if len(p)==3:
-		if p[2] < 0:
-			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
-		else: p[0] = p[2]
-	else: p[0] = 0
+def p_conditions(p):
+	'''conditions	: conditions AND condition
+					| conditions OR condition
+					| condition
+					| O_PAR conditions C_PAR
+					| NOT O_PAR conditions C_PAR ''' 
+	if len(p)>2:
+		if p[2] == 'and': p[0]=AndOperator(p[1],p[3])
+		elif p[2] == 'or': p[0]=OrOperator(p[1],p[3])
+		elif p[1] == 'not': p[0]=NotOperator(p[3])
+		elif p[1] == '(' : p[0]=p[2]
+	else: p[0]=p[1]
+
+def p_expression(p):
+	'''expression   : expression SUM term
+					| expression SUB term
+					| term	'''
+    
+	if len(p) > 2:
+		if p[2] == '+': p[0] = SumExpression(p[1],p[3])
+		elif p[2] == '-': p[0] = SubExpression(p[1],p[3])
+	else : p[0] = p[1]
+
+def p_term(p):
+	'''term	:	term MUL pow
+			|	term DIV pow
+			|	pow'''
+	if len(p) > 2:
+		if p[2] == '*': p[0] = MulTerm(p[1],p[3])
+		elif p[2] == '/': p[0] = DivTerm(p[1],p[3])
+	else : p[0] = p[1]
+
+def p_pow(p):
+	'''pow	: pow POW factor
+			| factor'''
+	if len(p) > 2:
+		p[0] = Pow(p[1],p[3])
+	else : p[0] = p[1]
+
+def p_factor(p):
+	'''factor	: number
+				| ID
+				| O_PAR expression C_PAR
+				| FUNC O_PAR expression C_PAR'''
+	if p.slice[1].type == 'ID': p[0] = Factor(p.slice[1])
+	elif p[1] == '(': p[0] = p[2]
+	elif len(p) > 4 : p[0] = Function(functions[p[1]],p[3])
+	else : p[0] = p[1]
+
+def p_number(p):
+	'''number 	: FLOAT
+				| SUB FLOAT'''
+	if len(p) == 2: 
+		if isinstance(p[1],float): p[0] = Value(p[1])
+		else: p[0] = Value(constants[p[1]])
+	else:
+		if isinstance(p[2],float): p[0] = Value(-1*p[2])
+		else: p[0] = Value(-1*constants[p[2]])
 
 def p_axiom(p):
-	'''axiom  : AXIOM O_KEY instructions_axiom C_KEY'''
+	'''axiom  : AXIOM O_KEY instructions C_KEY'''
 	p[0] = Axiom(p[3])
-
-def p_instructions_axiom(p):
-	'''instructions_axiom : instruction_axiom instructions_axiom
-	                      | instruction_axiom'''
-	if len(p)==2:
-		p[0] = [p[1]]
-	else:
-		p[0] = [p[1],*p[2]]
-
-def p_instruction_axiom(p):
-	'''instruction_axiom  : instruction_base
-	                      | CALL_RULE ID O_PAR INT C_PAR'''
-	if p[1] == 'call_rule':
-		if p[4] < 0:
-			token = p.slice[4]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} debe ser no negativo!')
-		else:
-			for rule in locals_rules:
-				if rule and rule.name == p[2]: 
-					p[0] = CallRuleInstruction(rule, depth=p[4])
-					break
-			else:
-				token = p.slice[2]
-				print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una regla definida!')
-	else: # es un instruction_base
-		p[0] = p[1]
 
 def p_error(p):
 	if p:
@@ -229,12 +265,7 @@ def p_error(p):
 	else:
 		print("Unexpected end of input")
 
-def find_column(t):
-	last_cr = t.lexer.lexdata.rfind('\n' , 0, t.lexpos)
-	if last_cr < 0:
-		last_cr = 0
-	column = (t.lexpos - last_cr)
-	return column 
+
 
 # SE REPORTA LOS ERRORES EN COMPILACION YA EN RUNTIME SE DA EXCEPCIONES
 # COMPROBAR Q LOS ID DE FILL Y PENCIL SON COLORES, TAMBIEN ACEPTAR HEXADECIMALES CON EXPRESIONES REGULARES
