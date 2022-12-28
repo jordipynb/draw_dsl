@@ -1,19 +1,27 @@
 shape tree {
     pencil green
-    rule F {
-        base : line 10
-        call_rule G
-        push
-        right 45
-        call_rule F
-        pop
-        left 45
-        call_rule F
+    rule F (n) {
+        if (n == 0) { # Chekeo de parentesis y comentarios
+            line 10
+        }
+        else {
+            call_rule G (n-1)
+            push
+            right 45
+            call_rule F (n-1)
+            pop
+            left 45
+            call_rule F (n-1)
+        }
     }
-    rule G {
-        base : line 10
-        call_rule G
-        call_rule G
+    rule G (p) {
+        if p == 0 {
+            line 10
+        }
+        else {
+            call_rule G (p-1)
+            call_rule G (p-1)
+        }
     }
     axiom {
         call_rule F (6)

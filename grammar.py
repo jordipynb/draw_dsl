@@ -41,7 +41,7 @@ def p_draw(p):
 	        | DRAW ID
 			| DRAW NILL'''
 	if p[2] == 'nill':
-		p[0] = Draw(Nill())
+		p[0] = Draw(Nill(), Value(0), Value(0))
 		return
 	for shape in shape_scope:
 		if shape and shape.name == p[2]: 
@@ -149,11 +149,11 @@ def p_instruction_base(p):
 		else:
 			token = p.slice[2]
 			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
-	elif p[1] == 'set_x': p[0] = Set_X(p[2])
-	elif p[1] == 'set_y': p[0] = Set_Y(p[2])
+	elif p[1] == 'set_x': p[0] = SetX(p[2])
+	elif p[1] == 'set_y': p[0] = SetY(p[2])
 	elif p[1] == 'set_pencil': p[0] = SetPencil(p[2])
-	elif p[3] == 'get_x': p[0] = Get_X(p[1])
-	elif p[3] == 'get_y': p[0] = Get_Y(p[1])
+	elif p[3] == 'get_x': p[0] = GetX(p[1])
+	elif p[3] == 'get_y': p[0] = GetY(p[1])
 	elif p[1] == 'call_rule': p[0] = CallRuleInstruction(p.slice[2],p[4])
 	else: p[0] = Assign(p[1],p[3])
 

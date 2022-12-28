@@ -5,7 +5,7 @@ shape triangle {
 		line 200
 		left 90
 		line 100
-		left 117
+		left 116.7
 		line 220
 	}
 }
