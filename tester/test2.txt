@@ -1,20 +1,26 @@
 shape koch_snowflake {
     pencil magenta
     rule forward (p) {
-        base : line 10
-        call_rule forward (p-1)
-        left 60
-        call_rule forward
-        right 120
-        call_rule forward
-        left 60
-        call_rule forward
+        if p == 0 {
+            line 10
+        }
+        else {
+            call_rule forward (p-1)
+            left 60
+            call_rule forward (p-1)
+            right 120
+            call_rule forward (p-1)
+            left 60
+            call_rule forward (p-1)
+        }
     }
     axiom {
+        i = 0
+        while i < 2 {
         call_rule forward (3)
         right 120
-        call_rule forward (3)
-        right 120
+        i = i + 1
+        }
         call_rule forward (3)
     }
 }

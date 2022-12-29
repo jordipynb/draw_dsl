@@ -1,24 +1,32 @@
 shape sierpinski_arrowhead {
     pencil green
-    rule X {
-        base : nill
-        call_rule Y
-        line 8
-        right 60
-        call_rule X
-        line 8
-        right 60
-        call_rule Y
+    rule X (n) {
+        if n == 0 {
+            nill
+        }
+        else {
+            call_rule Y (n-1)
+            line 8
+            right 60
+            call_rule X (n-1)
+            line 8
+            right 60
+            call_rule Y (n-1)
+        }
     }
-    rule Y {
-        base : nill
-        call_rule X
-        line 8
-        left 60
-        call_rule Y
-        line 8
-        left 60
-        call_rule X
+    rule Y (n) {
+        if n == 0 {
+            nill
+        }
+        else {
+            call_rule X (n-1)
+            line 8
+            left 60
+            call_rule Y (n-1)
+            line 8
+            left 60
+            call_rule X (n-1)
+        }
     }
     axiom {
         call_rule Y (6)

@@ -1,30 +1,38 @@
 shape tree_realistic {
     pencil darkgreen
-    rule F {
-        base : line 5
-        call_rule G
-        left 20
-        push
-        push
-        call_rule F
-        pop
-        right 20
-        call_rule F
-        pop
-        right 20
-        call_rule G
-        push
-        right 20
-        call_rule G
-        call_rule F
-        pop
-        left 20
-        call_rule F
+    rule F (n) {
+        if n == 0 { 
+            line 5 
+        }
+        else {
+            call_rule G (n-1)
+            left 20
+            push
+            push
+            call_rule F (n-1)
+            pop
+            right 20
+            call_rule F (n-1)
+            pop
+            right 20
+            call_rule G (n-1)
+            push
+            right 20
+            call_rule G (n-1)
+            call_rule F (n-1)
+            pop
+            left 20
+            call_rule F (n-1)
+        }
     }
-    rule G {
-        base : line 5
-        call_rule G
-        call_rule G
+    rule G (n) {
+        if n == 0 {
+            line 5
+        }
+        else {
+            call_rule G (n-1)
+            call_rule G (n-1)
+        }
     }
     axiom {
         right 25

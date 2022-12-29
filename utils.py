@@ -32,7 +32,9 @@ class Context:
     def set_value(self, name, value):
         if name in self.locals.keys():
             self.locals[name]=value
-        else: self.parent.set_value(name,value)
+            return True
+        if self.parent: return self.parent.set_value(name,value)
+        return False
         
 class Node:
     def evaluate(self):
@@ -57,8 +59,9 @@ class Axiom(ContextNode):
         self.instructions = instructions
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict=None):
+        context = Context()
         for elem in self.instructions:
-            elem.evaluate(ttle, Context(), scope)
+            elem.evaluate(ttle, context, scope)
 
 class Shape(ContextNode):
     def __init__(self, name:str, pencil:str, rules:list[Rule], axiom:Axiom):
@@ -198,7 +201,10 @@ class Assign(ContextNode):
         self.expression=expression
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict[str,Rule]=None):
-        context.set_value(self.ID, self.expression.evaluate(ttle, context, scope))
+        name = self.ID
+        value = self.expression.evaluate(ttle, context, scope)
+        if not context.set_value(name, value):
+            context.locals[name] = value
 
 class SetX(ContextNode):
     def __init__(self, expression:ContextNode):
@@ -219,14 +225,20 @@ class GetX(ContextNode):
         self.ID = ID
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict[str,Rule]=None):
-        context.set_value(self.ID, ttle.xcor())
+        name = self.ID
+        value = ttle.xcor()
+        if not context.set_value(name, value):
+            context.locals[name] = value
     
 class GetY(ContextNode):
     def __init__(self, ID):
         self.ID = ID
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict[str,Rule]=None):
-        context.set_value(self.ID, ttle.ycor())    
+        name = self.ID
+        value = ttle.ycor()
+        if not context.set_value(name, value):
+            context.locals[name] = value  
 
 class SetPencil(ContextNode):
     def __init__(self, ID):
@@ -257,10 +269,10 @@ class While(ContextNode):
         self.body = body
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict[str,Rule]=None):
+        context=context.create_children()
         while self.condition.evaluate(ttle, context, scope):
-            context=context.create_children()
             for instruction in self.body:
-                if isinstance(instruction,Break) or isinstance(instruction.evaluate(ttle, context, scope),Break): break
+                if isinstance(instruction,Break) or isinstance(instruction.evaluate(ttle, context, scope),Break): return
                 
 class AndOperator(ContextNode):
     def __init__(self, prop1:ContextNode, prop2:ContextNode):

@@ -1,22 +1,19 @@
 shape squares {
-	rule square_draw (t) {
+	axiom { 
 		i = 0
-		while i < 3 or i == 3 {
-			line 50
-			left 90
-			i = i + 1
-		}
-	}
-	rule iter_square (p) {
-		i = 0
-		while i < 35 or i == 35 {
-			call_rule square_draw (0)
+		while true {
+			j = 0
+			while j < 3 or j == 3 {
+				line 50
+				left 90
+				j = j + 1
+			}
 			right 10
 			i = i + 1
+			if i > 35 {
+				break
+			}
 		}
-	}
-	axiom { 
-		call_rule iter_square (0)
 	}
 }
 draw squares -70,30

@@ -1,27 +1,31 @@
 shape sierpinski_curve {
     pencil green
-    rule X {
-        base : nill
-        call_rule X
-        line 8
-        left 90
-        line 8
-        right 90
-        line 8
-        left 90
-        call_rule X
-        line 8
-        right 90
-        line 8
-        right 90
-        call_rule X
-        line 8
-        left 90
-        line 8
-        right 90
-        line 8
-        left 90
-        call_rule X
+    rule X (n) {
+        if n == 0 {
+            nill
+        }
+        else {
+            call_rule X (n-1)
+            line 8
+            left 90
+            line 8
+            right 90
+            line 8
+            left 90
+            call_rule X (n-1)
+            line 8
+            right 90
+            line 8
+            right 90
+            call_rule X (n-1)
+            line 8
+            left 90
+            line 8
+            right 90
+            line 8
+            left 90
+            call_rule X (n-1)
+        }
     }
     axiom {
         line 8

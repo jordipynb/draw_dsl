@@ -107,12 +107,11 @@ def p_instruction(p):
 					|	IF conditions O_KEY instructions C_KEY			
 					|	IF conditions O_KEY instructions C_KEY ELSE O_KEY instructions C_KEY
 					|	WHILE conditions O_KEY loop_instructions C_KEY'''
-	if len(p) == 2: p[0] = p[1]
-	else: 
-		if p[1] == 'if':
-			if len(p) > 6: p[0] = If(p[2],p[4],p[8])
-			else:  p[0] = If(p[2],p[4])
-		if p[1] == 'while': p[0] = While(p[2],p[4])
+	if p[1] == 'if':
+		if len(p) > 6: p[0] = If(p[2],p[4],p[8])
+		else:  p[0] = If(p[2],p[4])
+	elif p[1] == 'while': p[0] = While(p[2],p[4])
+	else: p[0] = p[1]
 
 def p_instruction_base(p):
 	'''instruction_base	: LEFT  expression   
@@ -161,12 +160,14 @@ def p_loop_instruction(p):
 	'''loop_instruction		: instruction_base
 							| BREAK
 							| IF conditions O_KEY loop_instructions  C_KEY
-							| IF conditions O_KEY loop_instructions C_KEY ELSE O_KEY loop_instructions C_KEY'''
+							| IF conditions O_KEY loop_instructions C_KEY ELSE O_KEY loop_instructions C_KEY
+							| WHILE conditions O_KEY loop_instructions C_KEY'''
     
 	if p[1] == 'if':
 		if len(p) > 6: p[0] = If(p[2],p[4],p[8])
 		else:  p[0] = If(p[2],p[4])
-	if p[1] == 'break': p[0] = Break()
+	elif p[1] == 'break': p[0] = Break()
+	elif p[1] == 'while': p[0] = While(p[2],p[4])
 	else: p[0] = p[1]
 
 def p_loop_instructions(p):
