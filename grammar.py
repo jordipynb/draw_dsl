@@ -15,22 +15,22 @@ locals_rules:list[Rule] = []
 draws:list[Draw] = []
 
 def p_scene(p):
-	'''scene : draws_instruction'''
+	'''scene : draws_instruction''' # Lista de shapes y draws
 	p[0] = Scene(draws, errors_list)
 	global shape_scope, locals_rules
 	del shape_scope, locals_rules
 
-def p_draws_instruction(p):
+def p_draws_instruction(p): 
 	'''draws_instruction : draws_instruction shape
 	                     | draws_instruction draw
 						 | shape
 						 | draw'''
-	if len(p) == 2:
+	if len(p) == 2: # Si es un shape o un draw, o sea, si no es una lista
 		if p.slice[1].type == 'shape':
 			shape_scope.append(p[1])
 		else:
 			draws.append(p[1])
-	else:
+	else: # Si es una lista
 		if p.slice[2].type == 'shape':
 			shape_scope.append(p[2])
 		else:
@@ -42,13 +42,21 @@ def p_draw(p):
 			| DRAW NILL'''
 	if p[2] == 'nill':
 		p[0] = Draw(Nill(), Value(0), Value(0))
-		return
-	for shape in shape_scope:
-		if shape and shape.name == p[2]: 
-			p[0] = Draw(shape,p[3],p[5]) if len(p) == 6 else Draw(shape, Value(0), Value(0))
-			return
-	token = p.slice[2]
-	print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+		# return
+	else:
+		id = p[2]
+		for shape in shape_scope:
+			if shape and shape.name == id: 
+				try:
+					x = p[3] # 1st production
+					y = p[5] # 1st production
+				except:
+					x = Value(0)
+					y = Value(0)
+				p[0] = Draw(shape,x,y)
+				break
+	# token = p.slice[2]
+	# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 
 def p_shape(p):
 	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
