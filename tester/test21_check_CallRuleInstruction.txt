@@ -1,0 +1,17 @@
+shape tree {
+    pencil green
+    rule forward (n) {
+        if n == 0 {
+            line 8
+        }
+    }
+    rule back (n) {
+        if n == 0 {
+            line 8
+        }
+    }
+    axiom {
+        call_rule leandro (4)
+    }
+}
+draw tree 0,0
