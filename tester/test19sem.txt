@@ -1,0 +1,18 @@
+shape tree {
+    pencil green
+    rule forward (n) {
+        if n == 0 {
+            line 8
+        }
+    }
+    rule back (n) {
+        if n == 0 {
+            line 8
+        }
+    }
+    axiom {
+        call_rule forward (4)
+        call_rule back (8)
+    }
+}
+draw tree 0,0
