@@ -94,7 +94,7 @@ class Break(ContextNode):
 
 class Value(ContextNode):
     def __init__(self, value):
-        self.value=value
+        self.value=int(value)
 
     def evaluate(self, ttle:turtle.Turtle, context:Context=None, scope:dict[str,Rule]=None):
         return self.value
