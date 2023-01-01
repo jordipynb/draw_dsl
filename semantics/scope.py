@@ -20,12 +20,13 @@ class ShapeInfo:
 
 class Scope:
     def __init__(self, parent=None):
-        self.shapes = []
-        self.local_rules = []
-        self.local_vars = []
+        # self.shapes = []
+        # self.local_rules = []
+        # self.local_vars = []
         self.parent = parent
         self.children = []
-        self.local_rules_at_parent = 0 if parent is None else len(parent.local_rules)
+        # self.local_rules_at_parent = 0 if parent is None else len(parent.local_rules)
+        
         
     def create_child_scope(self):
         child_scope = Scope(self)
