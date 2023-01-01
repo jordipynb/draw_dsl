@@ -1,6 +1,6 @@
 from semantics import visitor
 from semantics.scope import Scope
-from utils import Assign, Axiom, CallRuleInstruction, ContextNode, JumpInstruction, LeftInstruction, LineInstruction, Nill, PopInstruction, PushInstruction, RightInstruction, Rule, Scene, Draw, Shape, Value
+from utils import *
 S = '|  '
 
 
@@ -169,6 +169,110 @@ class SemanticCheckerVisitor(object):
     def visit(self, node: Assign, scope:Scope=None):
         self.visit(node.expression, scope)
         scope.define_var(node.ID, node.expression)
+        
+    @visitor.when(SetX)
+    def visit(self, node: SetX, scope:Scope=None):
+        self.visit(node.expression, scope)
+        
+    @visitor.when(SetY)
+    def visit(self, node: SetY, scope:Scope=None):
+        self.visit(node.expression, scope)
+        
+    @visitor.when(GetX)
+    def visit(self, node: GetX, scope:Scope=None):
+        pass
+        
+    @visitor.when(GetY)
+    def visit(self, node: GetY, scope:Scope=None):
+        pass
+    
+    @visitor.when(SetPencil)
+    def visit(self, node: SetPencil, scope:Scope=None):
+        self.check_pencil(node.ID)
+        
+    @visitor.when(If)
+    def visit(self, node: If, scope:Scope=None):
+        self.visit(node.condition, scope)
+        nscope = scope.create_child_scope()
+        for instruction in node.if_body:
+            self.visit(instruction, nscope)
+        if node.else_body:
+            for instruction in node.else_body:
+                self.visit(instruction, nscope)
+    
+    @visitor.when(While)
+    def visit(self, node: While, scope:Scope=None):
+        self.visit(node.condition, scope)
+        nscope = scope.create_child_scope(scope)
+        for instruction in node.body:
+            self.visit(instruction, nscope)
+            
+    @visitor.when(AndOperator)
+    def visit(self, node: AndOperator, scope:Scope=None):
+        self.visit(node.prop1, scope)
+        self.visit(node.prop1, scope)
+        
+    @visitor.when(OrOperator)
+    def visit(self, node: OrOperator, scope:Scope=None):
+        self.visit(node.prop1, scope)
+        self.visit(node.prop1, scope)
+        
+    @visitor.when(NotOperator)
+    def visit(self, node: NotOperator, scope:Scope=None):
+        self.visit(node.condition, scope)
+        
+    @visitor.when(GreaterCondition)
+    def visit(self, node: GreaterCondition, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(MenorCondition)
+    def visit(self, node: MenorCondition, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(EqualCondition)
+    def visit(self, node: EqualCondition, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(SumExpression)
+    def visit(self, node: SumExpression, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(SubExpression)
+    def visit(self, node: SubExpression, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(MulTerm)
+    def visit(self, node: MulTerm, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(DivTerm)
+    def visit(self, node: DivTerm, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(Pow)
+    def visit(self, node: Pow, scope:Scope=None):
+        self.visit(node.exp1, scope)
+        self.visit(node.exp2, scope)
+        
+    @visitor.when(Factor)
+    def visit(self, node: Factor, scope:Scope=None):
+        pass
+        
+    @visitor.when(Function)
+    def visit(self, node: Function, scope:Scope=None):
+        self.visit(node.expression, scope)
+        self.visit(node.func, scope)
+        
+    @visitor.when(CallShapeInstruction)
+    def visit(self, node: CallShapeInstruction, scope:Scope=None):
+        self.visit(node.shape, scope)
     
     @visitor.when(ContextNode)
     def visit(self, node: ContextNode, scope: Scope = None):
