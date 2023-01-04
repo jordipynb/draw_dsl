@@ -1,4 +1,4 @@
-from semantics.visitor import on, when
+from semantics import visitor
 from utils import *
 
 
@@ -6,159 +6,159 @@ class Visitor(object):
     def __init__(self):
         self.errors = []
 
-    @on('node')
+    @visitor.on('node')
     def visit(self, node):
         pass
 
-    @when(Scene)
+    @visitor.when(Scene)
     def visit(self, node: Scene):
         pass
 
-    @when(Draw)
+    @visitor.when(Draw)
     def visit(self, node: Draw):
         pass
 
-    @when(Shape)
+    @visitor.when(Shape)
     def visit(self, node: Shape):
         pass
     
-    @when(Nill)
+    @visitor.when(Nill)
     def visit(self, node: Nill):
         pass
 
-    @when(Rule)
+    @visitor.when(Rule)
     def visit(self, node: Rule):
         pass
     
-    @when(Axiom)
+    @visitor.when(Axiom)
     def visit(self, node:Axiom):
         pass
 
     ## ++++++++++++++++++++ Instructions ++++++++++++++++++++##
-    @when(Break)
+    @visitor.when(Break)
     def visit(self, node: Break):
         pass
 
-    @when(TrueCondition)
+    @visitor.when(TrueCondition)
     def visit(self, node: TrueCondition):
         pass
 
-    @when(FalseCondition)
+    @visitor.when(FalseCondition)
     def visit(self, node: FalseCondition):
         pass
 
-    @when(LeftInstruction)
+    @visitor.when(LeftInstruction)
     def visit(self, node: LeftInstruction):
         pass
 
-    @when(RightInstruction)
+    @visitor.when(RightInstruction)
     def visit(self, node: RightInstruction):
         pass
 
-    @when(LineInstruction)
+    @visitor.when(LineInstruction)
     def visit(self, node: LineInstruction):
         pass
 
-    @when(PushInstruction)
+    @visitor.when(PushInstruction)
     def visit(self, node: PushInstruction):
         pass
 
-    @when(PopInstruction)
+    @visitor.when(PopInstruction)
     def visit(self, node: PopInstruction):
         pass
 
-    @when(JumpInstruction)
+    @visitor.when(JumpInstruction)
     def visit(self, node: JumpInstruction):
         pass
 
-    @when(Assign)
+    @visitor.when(Assign)
     def visit(self, node: Assign):
         pass
 
-    @when(SetX)
+    @visitor.when(SetX)
     def visit(self, node: SetX):
         pass
 
-    @when(SetY)
+    @visitor.when(SetY)
     def visit(self, node: SetY):
         pass
 
-    @when(GetX)
+    @visitor.when(GetX)
     def visit(self, node: GetX):
         pass
 
-    @when(GetY)
+    @visitor.when(GetY)
     def visit(self, node: GetY):
         pass
 
-    @when(SetPencil)
+    @visitor.when(SetPencil)
     def visit(self, node: SetPencil):
         pass
 
-    @when(If)
+    @visitor.when(If)
     def visit(self, node: If):
         pass
 
-    @when(While)
+    @visitor.when(While)
     def visit(self, node: While):
         pass
 
-    @when(AndOperator)
+    @visitor.when(AndOperator)
     def visit(self, node: AndOperator):
         pass
 
-    @when(OrOperator)
+    @visitor.when(OrOperator)
     def visit(self, node: OrOperator):
         pass
 
-    @when(NotOperator)
+    @visitor.when(NotOperator)
     def visit(self, node: NotOperator):
         pass
 
-    @when(GreaterCondition)
+    @visitor.when(GreaterCondition)
     def visit(self, node: GreaterCondition):
         pass
 
-    @when(MenorCondition)
+    @visitor.when(MenorCondition)
     def visit(self, node: MenorCondition):
         pass
 
-    @when(EqualCondition)
+    @visitor.when(EqualCondition)
     def visit(self, node: EqualCondition):
         pass
 
-    @when(SumExpression)
+    @visitor.when(SumExpression)
     def visit(self, node: SumExpression):
         pass
 
-    @when(SubExpression)
+    @visitor.when(SubExpression)
     def visit(self, node: SubExpression):
         pass
 
-    @when(MulTerm)
+    @visitor.when(MulTerm)
     def visit(self, node: MulTerm):
         pass
 
-    @when(DivTerm)
+    @visitor.when(DivTerm)
     def visit(self, node: DivTerm):
         pass
 
-    @when(Pow)
+    @visitor.when(Pow)
     def visit(self, node: Pow):
         pass
 
-    @when(Factor)
+    @visitor.when(Factor)
     def visit(self, node: Factor):
         pass
 
-    @when(Function)
+    @visitor.when(Function)
     def visit(self, node: Function):
         pass
 
-    @when(CallShapeInstruction)
+    @visitor.when(CallShapeInstruction)
     def visit(self, node: CallShapeInstruction):
         pass
 
-    @when(CallRuleInstruction)
+    @visitor.when(CallRuleInstruction)
     def visit(self, node: CallRuleInstruction):
         pass
