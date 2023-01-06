@@ -142,59 +142,59 @@ class SemanticCheckerVisitor(object):
         for instruction in node.body:
             self.visit(instruction, nscope)
             
-    @visitor.when(AndOperator)
-    def visit(self, node: AndOperator, scope:Scope=None):
-        self.visit(node.prop1, scope)
-        self.visit(node.prop1, scope)
+    @visitor.when(AndCondition)
+    def visit(self, node: AndCondition, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(OrOperator)
-    def visit(self, node: OrOperator, scope:Scope=None):
-        self.visit(node.prop1, scope)
-        self.visit(node.prop1, scope)
+    @visitor.when(OrCondition)
+    def visit(self, node: OrCondition, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(NotOperator)
-    def visit(self, node: NotOperator, scope:Scope=None):
-        self.visit(node.condition, scope)
+    @visitor.when(NotCondition)
+    def visit(self, node: NotCondition, scope:Scope=None):
+        self.visit(node.expr, scope)
         
     @visitor.when(GreaterCondition)
     def visit(self, node: GreaterCondition, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
     @visitor.when(MenorCondition)
     def visit(self, node: MenorCondition, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
     @visitor.when(EqualCondition)
     def visit(self, node: EqualCondition, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(SumExpression)
-    def visit(self, node: SumExpression, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+    @visitor.when(SumExpr)
+    def visit(self, node: SumExpr, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(SubExpression)
-    def visit(self, node: SubExpression, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+    @visitor.when(SubExpr)
+    def visit(self, node: SubExpr, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(MulTerm)
-    def visit(self, node: MulTerm, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+    @visitor.when(MultExpr)
+    def visit(self, node: MultExpr, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(DivTerm)
-    def visit(self, node: DivTerm, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+    @visitor.when(DivExpr)
+    def visit(self, node: DivExpr, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
-    @visitor.when(Pow)
-    def visit(self, node: Pow, scope:Scope=None):
-        self.visit(node.exp1, scope)
-        self.visit(node.exp2, scope)
+    @visitor.when(PowExpr)
+    def visit(self, node: PowExpr, scope:Scope=None):
+        self.visit(node.left, scope)
+        self.visit(node.right, scope)
         
     @visitor.when(Factor)
     def visit(self, node: Factor, scope:Scope=None):
