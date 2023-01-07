@@ -59,12 +59,12 @@ class Instruction(ContextNode):
     pass
 
 
-class Expression(Instruction):
+class Expression(ContextNode):
     pass
 
 
 class Rule(ContextNode):
-    def __init__(self, name: str, param: str, instructions: list[ContextNode]):
+    def __init__(self, name: str, param: str, instructions: list[Instruction]):
         self.name = name
         self.instructions = instructions
         self.param = param
@@ -126,7 +126,7 @@ class Nill(ContextNode):
 
 
 class Rule(ContextNode):
-    def __init__(self, name: str, param: str, instructions: list[ContextNode]):
+    def __init__(self, name: str, param: str, instructions: list[Instruction]):
         self.name = name
         self.instructions = instructions
         self.param = param
@@ -189,7 +189,7 @@ class Scene(Node):
 
 
 class LeftInstruction(Instruction):
-    def __init__(self, expression: ContextNode):
+    def __init__(self, expression: Expression):
         self.expression = expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
@@ -198,7 +198,7 @@ class LeftInstruction(Instruction):
 
 
 class RightInstruction(Instruction):
-    def __init__(self, expression: ContextNode):
+    def __init__(self, expression: Expression):
         self.expression = expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
@@ -207,7 +207,7 @@ class RightInstruction(Instruction):
 
 
 class LineInstruction(Instruction):
-    def __init__(self, expression: ContextNode):
+    def __init__(self, expression: Expression):
         self.expression = expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
@@ -236,7 +236,7 @@ class PopInstruction(Instruction):
 
 
 class JumpInstruction(Instruction):
-    def __init__(self, exp1: ContextNode, exp2: ContextNode):
+    def __init__(self, exp1: Expression, exp2: Expression):
         self.x = exp1
         self.y = exp2
 
@@ -261,7 +261,7 @@ class Assign(Instruction):
 
 
 class SetX(Instruction):
-    def __init__(self, expression: ContextNode):
+    def __init__(self, expression: Expression):
         self.expression = expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
@@ -307,7 +307,7 @@ class SetPencil(Instruction):
 
 
 class If(Instruction):
-    def __init__(self, condition: ContextNode, if_body: list[ContextNode], else_body: list[ContextNode] = None):
+    def __init__(self, condition: Expression, if_body: list[Instruction], else_body: list[Instruction] = None):
         self.condition = condition
         self.if_body = if_body
         self.else_body = else_body
@@ -487,7 +487,7 @@ class CallShapeInstruction(Instruction):
 
 
 class CallRuleInstruction(Instruction):
-    def __init__(self, token: LexToken, expression: ContextNode):
+    def __init__(self, token: LexToken, expression: Expression):
         self.id = token.value
         self.expression = expression
 
