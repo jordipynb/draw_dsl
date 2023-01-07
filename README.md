@@ -29,8 +29,8 @@ Para definir figuras es necesario especificar su identificador <nombre> y el col
 * Lexer: para la realización del lexer se utilizó la librería ```ply``` por la facilidad que aportaba para su uso.
 * Parser: igual que con el lexer se utilizó el proporcionado por la librería ```ply``` por la eficiencia del parser LALR en este caso.
 * AST: para la construcción del ast se creó una jerarquía de clases que se puede encontrar en el script ```utils.py``` haciendo uso de estos nodos en las reglas y/o producciones de la gramática establecida.
-* Semantic:
-* Interpreter: 
+* Semantic: para analizar la semantica del AST nos apoyamos en el patron visitor, realizamos un visitor para coleccionar tipos, otro para validar contextos y otro para chequear tipos, los mismos se pueden encontrar en el directorio ```semantics.visitors```
+* Interpreter: Nuestro intérprete esta formado por una jerarquía de clases. La clase principal es Scene, que posee un conjunto de subclases de tipo Draw, La cual tiene un Shape, dicho Shape posee un conjunto de Rule's (equivalente a funciones, pero con un solo parámetro, en un lenguaje de propósito general) y además tiene un Axiom que es como la función main de Shape.
 
 ### Instalar los paquetes necesarios
 ```zsh
