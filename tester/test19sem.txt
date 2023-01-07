@@ -1,8 +1,12 @@
 shape tree {
     pencil green
     rule forward (n) {
+        a = 1 + 5
         if n == 0 {
             line 8
+        }
+        if n == p and a == k{
+            line 4
         }
     }
     rule back (n) {
@@ -15,4 +19,24 @@ shape tree {
         call_rule back (8)
     }
 }
+shape hierva {
+    pencil green
+    rule mirta (n) {
+        a = 1 + 5
+        if n == 0 {
+            line 8
+        }
+    }
+    rule penny (n) {
+        if n == 0 {
+            line 8
+        }
+    }
+    axiom {
+        call_rule forward (4)
+        call_rule back (8)
+    }
+}
 draw tree 0,0
+draw tree 3,4
+draw hierva 3,3

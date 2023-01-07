@@ -1,5 +1,5 @@
 from grammar import *
-from semantics.visitors import FormatVisitor, SemanticCheckerVisitor
+from semantics.core import check_semantics
 
 # input = open(f"tester/test0.txt").read() # DONE
 # input = open(f"tester/test1.txt").read() # DONE
@@ -27,12 +27,5 @@ if ast:
 	print(ast) 
 else:
 	raise RuntimeError("AST Incomplete")
+check_semantics(ast)
 # ast.evaluate()
-# print(f"{ast=}, {type(ast)=}")
-
-semantic = SemanticCheckerVisitor()
-asn = "Errors:"
-errors = semantic.visit(ast)
-errors = "\n".join(errors) if len(errors) > 0 else "No existen errores"
-print(f"{asn}\n{errors}")
-print(FormatVisitor().visit(ast))
