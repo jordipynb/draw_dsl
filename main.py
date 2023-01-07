@@ -13,11 +13,11 @@ from semantics.core import check_semantics
 # input = open(f"tester/test15.txt").read() # DONE
 # input = open(f"tester/test16.txt").read() # DONE
 # input = open(f"tester/test17.txt").read() # DONE
-# input = open(f"tester/test18.txt").read() # DONE
+input = open(f"tester/test18.txt").read() # DONE
 
 
 # Lele testers
-input = open(f"tester/test19sem.txt").read()
+# input = open(f"tester/test19sem.txt").read()
 # input = open(f"tester/test20sem_check_PencilColor.txt").read() # DONE
 # input = open(f"tester/test20sem_check_CallRuleInstruction.txt").read() # DONE
 

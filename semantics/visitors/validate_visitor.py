@@ -7,15 +7,15 @@ import utils
 class ContextValidatorVisitor(object):
     def __init__(self):
         self.errors = []
-        
+
     @property
     def has_errors(self):
         return len(self.errors) > 0
-    
+
     @property
     def show_errors(self):
         print('\n'.join(set(self.errors)))
-        
+
     @property
     def error(self):
         if len(self.errors) > 0:
@@ -26,21 +26,23 @@ class ContextValidatorVisitor(object):
         pass
 
     @visitor.when(utils.Scene)
-    def visit(self, node: utils.Scene, scope: Scope=None):
+    def visit(self, node: utils.Scene, scope: Scope = None):
         scope = RuleShapeCollector(node).scope
         for draw in node.draws:
             self.visit(draw, scope)
 
     @visitor.when(utils.Draw)
-    def visit(self, node: utils.Draw, scope: Scope=None):
+    def visit(self, node: utils.Draw, scope: Scope = None):
         return self.visit(node.shape, scope)
 
     @visitor.when(utils.Shape)
     def visit(self, node: utils.Shape, scope: Scope):
-        for rule in node.rules:
-            if not self.visit(rule, scope):
-                return False
-        return self.visit(node.axiom, scope)
+        if node.rules:
+            for rule in node.rules:
+                if not self.visit(rule, scope):
+                    return False
+            return self.visit(node.axiom, scope)
+        return False
 
     # @visitor.when(utils.Nill)
     # def visit(self, node: utils.Nill, scope: Scope):
@@ -67,7 +69,7 @@ class ContextValidatorVisitor(object):
     @visitor.when(utils.JumpInstruction)
     def visit(self, node: utils.JumpInstruction, scope: Scope):
         return self.visit(node.x, scope) and self.visit(node.y, scope)
-        
+
     @visitor.when(utils.LeftInstruction)
     def visit(self, node: utils.LeftInstruction, scope: Scope):
         return self.visit(node.expression, scope)
@@ -88,12 +90,11 @@ class ContextValidatorVisitor(object):
     # def visit(self, node: utils.PopInstruction, scope: Scope):
     #     pass
 
-    
-
     @visitor.when(utils.Assign)
     def visit(self, node: utils.Assign, scope: Scope):
         scope.define_var(node.ID)
-        return self.visit(node.expression, scope) # Creo que aqui puede haber un posible error semantico
+        # Creo que aqui puede haber un posible error semantico
+        return self.visit(node.expression, scope)
 
     @visitor.when(utils.SetX)
     def visit(self, node: utils.SetX, scope: Scope):
@@ -101,7 +102,7 @@ class ContextValidatorVisitor(object):
 
     @visitor.when(utils.SetY)
     def visit(self, node: utils.SetY, scope: Scope):
-        return self.visit(node.expression,scope)
+        return self.visit(node.expression, scope)
 
     @visitor.when(utils.GetX)
     def visit(self, node: utils.GetX, scope: Scope):
@@ -119,27 +120,34 @@ class ContextValidatorVisitor(object):
 
     @visitor.when(utils.If)
     def visit(self, node: utils.If, scope: Scope):
-        if not self.visit(node.condition, scope):  # Aqui pueden haber problemas con la condicion
+        # Aqui pueden haber problemas con la condicion
+        if not self.visit(node.condition, scope):
             return False
         nscope = scope.create_child_scope()
+        nscope.local_vars.extend(scope.local_vars)
         for instruction in node.if_body:
-            if not self.visit(instruction, nscope): return False
+            if not self.visit(instruction, nscope):
+                return False
         if node.else_body:
             for instruction in node.else_body:
-                if not self.visit(instruction, nscope): return False
+                if not self.visit(instruction, nscope):
+                    return False
         return True
 
     @visitor.when(utils.While)
     def visit(self, node: utils.While, scope: Scope):
-        if not self.visit(node.condition, scope):  # Aqui pueden haber problemas con la condicion
+        # Aqui pueden haber problemas con la condicion
+        if not self.visit(node.condition, scope):
             return False
         nscope = scope.create_child_scope()
         nscope.define_loop()
+        nscope.local_vars.extend(scope.local_vars)
         for instruction in node.body:
-            if not self.visit(instruction, nscope): return False
+            if not self.visit(instruction, nscope):
+                return False
         nscope.undefine_loop()
         return True
-    
+
     @visitor.when(utils.Break)
     def visit(self, node: utils.Break, scope: Scope):
         if not scope.inside_loop:
@@ -225,7 +233,7 @@ class ContextValidatorVisitor(object):
 
     @visitor.when(utils.Function)
     def visit(self, node: utils.Function, scope: Scope):
-        if not scope.check_fun(node.func, 1): # Aqui puede haber un error
+        if not scope.check_fun(node.func, 1):  # Aqui puede haber un error
             self.errors.append(f"La funcion {node.func} no esta definida")
             return False
         return self.visit(node.expression, scope)
@@ -242,16 +250,15 @@ class ContextValidatorVisitor(object):
     def visit(self, node: utils.FalseCondition, scope: Scope):
         return True
 
-    
     @visitor.when(utils.Factor)
     def visit(self, node: utils.Factor, scope: Scope):
         value, line, column = scope.token_info(node.ID)
         if not scope.check_var(value):
-            self.errors.append(f'SemanticError: "{value}" en la línea {line}, columna {column} no esta definido')
+            self.errors.append(
+                f'SemanticError: "{value}" en la línea {line}, columna {column} no esta definido')
             return False
         return True
 
-    
     # @visitor.when(utils.Expression)
     # def visit(self, node: utils.Expression, scope: Scope):
     #     raise node

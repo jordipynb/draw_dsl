@@ -39,7 +39,7 @@ class Scope:
         return fun in self.local_funcs
 
     def exist_rule(self, rule: str) -> bool:
-        return rule in self.local_rules
+        return rule in self.local_rules or (self.parent and self.parent.exist_rule(rule))
     
     def exist_shape(self, shape:str):
         return shape in self.local_shapes

@@ -2,11 +2,12 @@ from semantics import visitor
 from semantics.scope import Scope
 from utils import *
 
+
 class RuleShapeCollector:
     def __init__(self, scene) -> None:
         self.scope = Scope()
         self.visit(scene)
-        
+
     @visitor.on('node')
     def visit(self, node):
         pass
@@ -23,9 +24,10 @@ class RuleShapeCollector:
     @visitor.when(Shape)
     def visit(self, node: Shape):
         self.scope.define_shape(node.name)
-        for rule in node.rules:
-            self.visit(rule)
-        
+        if node.rules:
+            for rule in node.rules:
+                self.visit(rule)
+
     @visitor.when(Rule)
     def visit(self, node: Rule):
         self.scope.define_rule(node.name, node.param)
@@ -43,35 +45,35 @@ class TypeCollector:
             self.visit(draw, scope)
 
     @visitor.when(Draw)
-    def visit(self, node: Draw, scope:Scope):
+    def visit(self, node: Draw, scope: Scope):
         # new_scope = scope.create_child_scope()
         self.visit(node.shape, scope)
         self.visit(node.x, scope)
         self.visit(node.y, scope)
 
     @visitor.when(Shape)
-    def visit(self, node: Shape, scope:Scope):
+    def visit(self, node: Shape, scope: Scope):
         for rule in node.rules:
             self.visit(rule, scope)
         self.visit(node.axiom, scope)
-    
+
     @visitor.when(Nill)
-    def visit(self, node: Nill, scope:Scope):
+    def visit(self, node: Nill, scope: Scope):
         pass
 
     @visitor.when(Rule)
-    def visit(self, node: Rule, scope:Scope):
+    def visit(self, node: Rule, scope: Scope):
         scope.create_type(node.name)
         for instruction in node.instructions:
             self.visit(instruction, scope)
-    
+
     @visitor.when(Axiom)
-    def visit(self, node:Axiom, scope:Scope):
+    def visit(self, node: Axiom, scope: Scope):
         for instruction in node.instructions:
             self.visit(instruction, scope)
-    
+
     @visitor.when(Value)
-    def visit(self, node:Value, scope:Scope):
+    def visit(self, node: Value, scope: Scope):
         pass
 
     ## ++++++++++++++++++++ Instructions ++++++++++++++++++++##
