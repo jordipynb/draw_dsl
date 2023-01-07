@@ -26,8 +26,8 @@ Para definir figuras es necesario especificar su identificador <nombre> y el col
 > donde V es un no terminal y w es una cadena de terminales y/o no terminales. En el caso de este problema, dicha gramática tiene una naturaleza decidible habiendo encontrado un algoritmo de decisión u analizador para resolverlo (LALR).
 
 ### Arquitectura del Compilador
-* Lexer: para la realización del lexer se utilizó la librería ```ply``` por la facilidad aportaba para su uso.
-* Parser: igual que con el lexer se utilizó el proporcionado por la librería ```ply``` por la eficiencia del parser LALR.
+* Lexer: para la realización del lexer se utilizó la librería ```ply``` por la facilidad que aportaba para su uso.
+* Parser: igual que con el lexer se utilizó el proporcionado por la librería ```ply``` por la eficiencia del parser LALR en este caso.
 * AST: para la construcción del ast se creó una jerarquía de clases que se puede encontrar en el script ```utils.py``` haciendo uso de estos nodos en las reglas y/o producciones de la gramática establecida
 * Semantic:
 * Interpreter: 
