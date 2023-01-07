@@ -1,66 +1,93 @@
-class VariableInfo:
-    def __init__(self, name:str) -> None:
-        self.name = name
-        
-class InstructionInfo:
-    def __init__(self) -> None:
-        pass
+from ply.lex import LexToken
 
-class RuleInfo:
-    def __init__(self, name:str, param:VariableInfo) -> None:
-        self.name = name
-        self.param = param
-
-class AxiomInfo:
-    def __init__(self, instructions:list[InstructionInfo]) -> None:
-        self.instructions = instructions
-
-class ShapeInfo:
-    def __init__(self, name:str) -> None:
-        self.name = name
+def find_column(t):
+    last_cr = t.lexer.lexdata.rfind('\n', 0, t.lexpos)
+    if last_cr < 0:
+        last_cr = 0
+    column = (t.lexpos - last_cr)
+    return column
 
 class Scope:
     def __init__(self, parent=None):
-        # self.shapes = []
-        # self.local_rules = []
-        # self.local_vars = []
         self.parent = parent
         self.children = []
-        self.local_rules = []
-        self.local_vars = {}
-        # self.local_rules_at_parent = 0 if parent is None else len(parent.local_rules)
+        self.local_rules = {}
+        self.local_vars = []
+        self.local_shapes = []
+        self.local_funcs = {}
+        self.inside_loop = False
         
-        
+
     def create_child_scope(self):
         child_scope = Scope(self)
         self.children.append(child_scope)
         return child_scope
     
-    # def define_shape(self, name):
-    #     # child_scope = self.create_child_scope()
-    #     shape = ShapeInfo(name)
-    #     self.shapes.append(shape)
-    #     return self
-    
-    # def is_shape_defined(self, name):
-    #     for shape in self.shapes:
-    #         if shape.name == name:
-    #             return True
-    #     return False
-    
-    def define_rule(self, name, param):
-        rule = RuleInfo(name, VariableInfo(param))
-        self.local_rules.append(rule)
-    
-    def is_rule_defined(self, name):
-        for rule in self.local_rules:
-            if rule.name == name:
-                return True
-        return False
-    
-    def define_var(self, name, value):
-        if not self.exist_var(name):
-            self.local_vars[name] = value
+    def token_info(self, token: LexToken):
+        value = token.value
+        line = token.lineno
+        column = find_column(token)
+        return value, line, column
 
     def exist_var(self, name):
         return name in self.local_vars
+
+    def exist_var(self, var: str) -> bool:
+        return var in self.local_vars
+
+    def exist_fun(self, fun: str) -> bool:
+        return fun in self.local_funcs
+
+    def exist_rule(self, rule: str) -> bool:
+        return rule in self.local_rules or (self.parent and self.parent.exist_rule(rule))
+    
+    def exist_shape(self, shape:str):
+        return shape in self.local_shapes
+
+    def check_var(self, var: str) -> bool:
+        return self.exist_var(var)
+
+    def check_fun(self, fun: str, len_args: int) -> bool:
+        if self.exist_fun(fun):
+            return any(len_args == len(args) for args in self.local_funcs.values())
+        return False
+
+    def check_rule(self, rule: str) -> bool:
+        return self.exist_rule(rule)
+    
+    def check_shape(self, shape: str) -> bool:
+        return self.exist_rule(shape)
+
+    def define_var(self, var: str) -> bool:
+        if self.exist_var(var):
+            return False
+        else:
+            self.local_vars.append(var)
+            return True
+
+    def define_fun(self, fun: str, args: list[str]) -> bool:
+        if self.exist_fun(fun):
+            return False
+        else:
+            self.local_funcs[fun] = args
+            return True
+
+    def define_rule(self, rule: str, param: str) -> bool:
+        if self.exist_rule(rule):
+            return False
+        else:
+            self.local_rules[rule] = param
+            return True
+
+    def define_shape(self, shape: str) -> bool:
+        if self.exist_shape(shape):
+            return False
+        else:
+            self.local_shapes.append(shape)
+            return True
+        
+    def define_loop(self):
+        self.inside_loop = True
+        
+    def undefine_loop(self):
+        self.inside_loop = False

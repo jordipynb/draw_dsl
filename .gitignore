@@ -6,6 +6,7 @@ parser/
 parser/*
 lang/*
 lang/
+semantics/visitors/visitor_skeleton.py
 
 ### PyCharm ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio, WebStorm and Rider

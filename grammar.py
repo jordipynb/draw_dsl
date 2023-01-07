@@ -198,7 +198,7 @@ def p_condition(p):
 	elif p[2] == '>' : p[0] = GreaterCondition(p[1],p[3])
 	elif p[2] == '<' : p[0] = MenorCondition(p[1],p[3])
 	elif p[2] == '==': p[0] = EqualCondition(p[1],p[3])
-	else: p[0] = NotOperator(p[2])
+	else: p[0] = NotCondition(p[2])
 
 def p_conditions(p):
 	'''conditions	: conditions AND condition
@@ -207,9 +207,9 @@ def p_conditions(p):
 					| O_PAR conditions C_PAR
 					| NOT O_PAR conditions C_PAR ''' 
 	if len(p)>2:
-		if p[2] == 'and': p[0]=AndOperator(p[1],p[3])
-		elif p[2] == 'or': p[0]=OrOperator(p[1],p[3])
-		elif p[1] == 'not': p[0]=NotOperator(p[3])
+		if p[2] == 'and': p[0]=AndCondition(p[1],p[3])
+		elif p[2] == 'or': p[0]=OrCondition(p[1],p[3])
+		elif p[1] == 'not': p[0]=NotCondition(p[3])
 		elif p[1] == '(' : p[0]=p[2]
 	else: p[0]=p[1]
 
@@ -219,8 +219,8 @@ def p_expression(p):
 					| term	'''
     
 	if len(p) > 2:
-		if p[2] == '+': p[0] = SumExpression(p[1],p[3])
-		elif p[2] == '-': p[0] = SubExpression(p[1],p[3])
+		if p[2] == '+': p[0] = SumExpr(p[1],p[3])
+		elif p[2] == '-': p[0] = SubExpr(p[1],p[3])
 	else : p[0] = p[1]
 
 def p_term(p):
@@ -228,15 +228,15 @@ def p_term(p):
 			|	term DIV pow
 			|	pow'''
 	if len(p) > 2:
-		if p[2] == '*': p[0] = MulTerm(p[1],p[3])
-		elif p[2] == '/': p[0] = DivTerm(p[1],p[3])
+		if p[2] == '*': p[0] = MultExpr(p[1],p[3])
+		elif p[2] == '/': p[0] = DivExpr(p[1],p[3])
 	else : p[0] = p[1]
 
 def p_pow(p):
 	'''pow	: pow POW factor
 			| factor'''
 	if len(p) > 2:
-		p[0] = Pow(p[1],p[3])
+		p[0] = PowExpr(p[1],p[3])
 	else : p[0] = p[1]
 
 def p_factor(p):
@@ -281,7 +281,7 @@ def p_error(p):
 # CHEKEAR LA GRAMATICA EN GRAN MEDIDA HASTA PARTIRLA O ENCONTRAR UNA SECUENCIA Q LA GENERA Y NO DEBA
 # HACER EL FLUJO DEL CODIGO --
 #                            |
-#   INPUT -> COMANDO DE PARADA DE ESCRITURA -> MOSTRAR SECUENCIA DE ERRORES ORDENADAS Y PREGUNTAR SI ESTA SEGURO DE RUNEAR EL CODE
+#   INPUT -> COMANDO DE PARADA DE ESCRITURA -> MOSTRAR SECUENCImmmmnmnA DE ERRORES ORDENADAS Y PREGUNTAR SI ESTA SEGURO DE RUNEAR EL CODE
 #   YES -> EVALUAR EL AST A PESAR DE LOS ERRORES (SI DEJA, CUANDO ENCONTRAMOS NONE LANZAR ERRORES SEMANTICOS POR ORDEN), SINO DEJA 
 #          ES XQ HUBO ERRORES DE SYNTAXIS Y EL LOS LANZA SOLO
 #   NO  -> CONTINUAR CON EL INPUT HASTA Q VUELVA A PONER COMANDO DE PARADA

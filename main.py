@@ -1,5 +1,5 @@
 from grammar import *
-from semantics.visitors import FormatVisitor, SemanticCheckerVisitor
+from semantics.core import check_semantics
 
 # input = open(f"tester/test0.txt").read() # DONE
 # input = open(f"tester/test1.txt").read() # DONE
@@ -13,26 +13,17 @@ from semantics.visitors import FormatVisitor, SemanticCheckerVisitor
 # input = open(f"tester/test15.txt").read() # DONE
 # input = open(f"tester/test16.txt").read() # DONE
 # input = open(f"tester/test17.txt").read() # DONE
-# input = open(f"tester/test18.txt").read() # DONE
+input = open(f"tester/test18.txt").read() # DONE
 
 
 # Lele testers
-input = open(f"tester/test19sem.txt").read()
+# input = open(f"tester/test19sem.txt").read()
 # input = open(f"tester/test20sem_check_PencilColor.txt").read() # DONE
 # input = open(f"tester/test20sem_check_CallRuleInstruction.txt").read() # DONE
 
 
 ast:Scene = parser.parse(input,lexer=lexer)
-if ast:
-	print(ast) 
-else:
+if not ast:
 	raise RuntimeError("AST Incomplete")
-# ast.evaluate()
-# print(f"{ast=}, {type(ast)=}")
-
-semantic = SemanticCheckerVisitor()
-asn = "Errors:"
-errors = semantic.visit(ast)
-errors = "\n".join(errors) if len(errors) > 0 else "No existen errores"
-print(f"{asn}\n{errors}")
-print(FormatVisitor().visit(ast))
+check_semantics(ast)
+ast.evaluate()
