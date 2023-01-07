@@ -15,6 +15,11 @@ class ContextValidatorVisitor(object):
     @property
     def show_errors(self):
         print('\n'.join(set(self.errors)))
+        
+    @property
+    def error(self):
+        if len(self.errors) > 0:
+            return self.errors[0]
 
     @visitor.on('node')
     def visit(self, node):

@@ -23,9 +23,7 @@ input = open(f"tester/test19sem.txt").read()
 
 
 ast:Scene = parser.parse(input,lexer=lexer)
-if ast:
-	print(ast) 
-else:
+if not ast:
 	raise RuntimeError("AST Incomplete")
 check_semantics(ast)
-# ast.evaluate()
+ast.evaluate()
