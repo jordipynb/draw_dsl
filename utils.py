@@ -3,6 +3,7 @@ from dataclasses import dataclass
 import enum
 import turtle
 import _tkinter
+import exceptions
 from ply.lex import LexToken
 from lexer import *
 
@@ -23,8 +24,7 @@ def token_info(token: LexToken):
         column = find_column(token)
         return value, line, column
 
-class MyError(Exception):
-    pass
+
 class Context:
     def __init__(self, parent=None):
         self.locals = {}
@@ -38,8 +38,8 @@ class Context:
             if vname == token.value:
                 return value
         if self.parent is None:
-            print(f'SemanticError: "{token.value}" no está definido')
-            raise MyError("")
+            print(exceptions.IdentifierNotDefined(token))
+            raise exceptions.EmptyError("")
         return self.parent.search(token)
 
     def set_value(self, name, value):
@@ -123,8 +123,9 @@ class Shape(ContextNode):
         try: 
             ttle.pencolor(self.pencil)
         except turtle.TurtleGraphicsError:
-            print(f'RuntimeError: {self.pencil} no es un color aceptado')
-            raise MyError()
+            
+            print(exceptions.ColorNotDefined(self.pencil).runtime_error)
+            raise exceptions.EmptyError()
         self.axiom.evaluate(ttle, scope=self.scope)
 
 
@@ -137,10 +138,11 @@ class Nill(ContextNode):
 
 
 class Rule(ContextNode):
-    def __init__(self, name: str, param: str, instructions: list[Instruction]):
+    def __init__(self, name: str, param: str, instructions: list[Instruction], token: LexToken=None):
         self.name = name
         self.instructions = instructions
         self.param = param
+        self.token = token
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         for elem in self.instructions:
@@ -159,7 +161,7 @@ class Axiom(ContextNode):
 
 class Break(Instruction):
     def __init__(self, token: LexToken):
-        pass
+        self.token = token
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self
@@ -180,8 +182,9 @@ class Draw(Node):
         ttle.speed(0)
         ttle.pensize(2)
         if isinstance(self.shape, LexToken):
-            print(f'SemanticError: "{self.shape.value}" no es una figura definida')
-            raise MyError("")
+            # print(f'SemanticError: "{self.shape.value}" no es una figura definida')
+            print(exceptions.ShapeNotDefined(self.shape))
+            raise exceptions.EmptyError("")
         self.shape.evaluate(ttle)
         ttle.hideturtle()
 
@@ -199,7 +202,7 @@ class Scene(Node):
             pass
         except _tkinter.TclError:
             pass
-        except MyError:
+        except exceptions.EmptyError:
             pass
 
 
@@ -321,8 +324,8 @@ class SetPencil(Instruction):
         try: 
             ttle.pencolor(self.ID)
         except turtle.TurtleGraphicsError:
-            print(f'RuntimeError: {self.pencil} no es un color aceptado')
-            raise MyError()
+            print(exceptions.ColorNotDefined(self.pencil).runtime_error)
+            raise exceptions.EmptyError()
 
 
 class If(Instruction):
@@ -489,9 +492,10 @@ class PowExpr(BinaryExpr):
 
 
 class Function(Instruction):
-    def __init__(self, func, expression: Expression):
+    def __init__(self, func, expression: Expression, token: LexToken):
         self.expression = expression
         self.func = func
+        self.token = token
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.func(self.expression.evaluate(ttle, context, scope))
@@ -509,14 +513,15 @@ class CallRuleInstruction(Instruction):
     def __init__(self, token: LexToken, expression: Expression):
         self.id = token.value
         self.expression = expression
+        self.token = token
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         depth = self.expression.evaluate(ttle, context)
         try:
             rule = scope[self.id]
         except KeyError:
-            print(f'SemanticError: La regla "{self.id}" no está definida en el scope')
-            raise MyError()
+            print(exceptions.RuleNotDefined(self.token))
+            raise exceptions.EmptyError()
         new_context = Context()
         new_context.locals[rule.param] = depth
         rule.evaluate(ttle, new_context, scope)

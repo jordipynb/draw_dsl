@@ -1,4 +1,4 @@
-from exceptions import ShapeNotDefined
+from exceptions import RuleNotDefined, ShapeNotDefined
 from ply import yacc as yacc
 from utils import *
 import os
@@ -58,7 +58,8 @@ def p_draw(p):
 		else:
 			token = p.slice[2]
 			p[0] = Draw(token,Value(0),Value(0))
-			print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+			print(ShapeNotDefined(token).warning_message)
+			# print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 
 
 def p_shape(p):
@@ -67,7 +68,8 @@ def p_shape(p):
 		for shape in shape_scope:
 			if shape.name == p[2]:
 				token = p.slice[2]
-				print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
+				print(ShapeNotDefined(token).warning_message)
+				# print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
 				p[0] = Shape(None,p[4],p[5],p[6])
 				return
 	global locals_rules
@@ -101,9 +103,10 @@ def p_rule(p):
 	for rule in locals_rules:
 		if rule.name == p[2]:
 			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una regla')
-			return
-	p[0] = Rule(p[2], p[4], p[7])
+			print(RuleNotDefined(token))
+			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una regla')
+			# return
+	p[0] = Rule(p[2], p[4], p[7], p.slice[2])
 	locals_rules.append(p[0])
 
 def p_instructions(p):
@@ -159,7 +162,8 @@ def p_instruction_base(p):
 				break
 		else:
 			token = p.slice[2]
-			print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+			print(ShapeNotDefined(token))
+			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 	elif p[1] == 'set_x': p[0] = SetX(p[2])
 	elif p[1] == 'set_y': p[0] = SetY(p[2])
 	elif p[1] == 'set_pencil': p[0] = SetPencil(p[2])
@@ -250,7 +254,7 @@ def p_factor(p):
 				| FUNC O_PAR expression C_PAR'''
 	if p.slice[1].type == 'ID': p[0] = Factor(p.slice[1])
 	elif p[1] == '(': p[0] = p[2]
-	elif len(p) > 4 : p[0] = Function(functions[p[1]],p[3])
+	elif len(p) > 4 : p[0] = Function(functions[p[1]],p[3],p.slice[1])
 	else : p[0] = p[1]
 
 def p_number(p):

@@ -24,7 +24,6 @@ class RuleShapeCollector:
 
     @visitor.when(Shape)
     def visit(self, node: Shape):
-        self.scope.define_shape(node.name)
         if node.rules:
             for rule in node.rules:
                 self.visit(rule)
