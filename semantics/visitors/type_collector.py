@@ -47,7 +47,6 @@ class TypeCollector:
 
     @visitor.when(Draw)
     def visit(self, node: Draw, scope: Scope):
-        # new_scope = scope.create_child_scope()
         self.visit(node.shape, scope)
         self.visit(node.x, scope)
         self.visit(node.y, scope)   

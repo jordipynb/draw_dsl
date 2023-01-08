@@ -10,14 +10,14 @@ except OSError as e:
     if e.errno != errno.EEXIST:
         raise
 
-errors_list = []
 shape_scope:list[Shape] = []
 locals_rules:list[Rule] = []
 draws:list[Draw] = []
 
 def p_scene(p):
+
 	'''scene : draws_instruction'''
-	p[0] = Scene(draws, errors_list)
+	p[0] = Scene(draws)
 	global shape_scope, locals_rules
 	del shape_scope, locals_rules
 
@@ -48,15 +48,18 @@ def p_draw(p):
 		for shape in shape_scope:
 			if shape and shape.name == id: 
 				try:
-					x = p[3] # 1st production
-					y = p[5] # 1st production
+					x = p[3]
+					y = p[5]
 				except:
 					x = Value(0)
 					y = Value(0)
 				p[0] = Draw(shape,x,y)
 				break
-	token = p.slice[2]
-	print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+		else:
+			token = p.slice[2]
+			p[0] = Draw(token,Value(0),Value(0))
+			print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+
 
 def p_shape(p):
 	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
@@ -64,7 +67,9 @@ def p_shape(p):
 		for shape in shape_scope:
 			if shape.name == p[2]:
 				token = p.slice[2]
-				print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
+				print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
+				p[0] = Shape(None,p[4],p[5],p[6])
+				return
 	global locals_rules
 	locals_rules = []
 	p[0] = Shape(p[2],p[4],p[5],p[6])
