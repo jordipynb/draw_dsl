@@ -17,11 +17,13 @@ def find_column(t):
     column = (t.lexpos - last_cr)
     return column
 
+class MyError(Exception):
+    pass
 
 class Context:
     def __init__(self, parent=None):
         self.locals = {}
-        self.parent = parent
+        self.parent:Context = parent
 
     def create_children(self):
         return Context(self)
@@ -31,8 +33,8 @@ class Context:
             if vname == token.value:
                 return value
         if self.parent is None:
-            print(
-                f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no esta definido')
+            print(f'SemanticError: "{token.value}" no está definido')
+            raise MyError("")
         return self.parent.search(token)
 
     def set_value(self, name, value):
@@ -113,7 +115,11 @@ class Shape(ContextNode):
         if self.rules:
             for rule in self.rules:
                 self.scope[rule.name] = rule
-        ttle.pencolor(self.pencil)
+        try: 
+            ttle.pencolor(self.pencil)
+        except turtle.TurtleGraphicsError:
+            print(f'RuntimeError: {self.pencil} no es un color aceptado')
+            raise MyError()
         self.axiom.evaluate(ttle, scope=self.scope)
 
 
@@ -168,14 +174,16 @@ class Draw(Node):
         ttle.down()
         ttle.speed(0)
         ttle.pensize(2)
+        if isinstance(self.shape, LexToken):
+            print(f'SemanticError: "{self.shape.value}" no es una figura definida')
+            raise MyError("")
         self.shape.evaluate(ttle)
         ttle.hideturtle()
 
 
 class Scene(Node):
-    def __init__(self, draws: list[Draw], error_list: list[str]):
+    def __init__(self, draws: list[Draw]):
         self.draws = draws
-        self.error_list = error_list
 
     def evaluate(self):
         try:
@@ -185,6 +193,8 @@ class Scene(Node):
         except turtle.Terminator:
             pass
         except _tkinter.TclError:
+            pass
+        except MyError:
             pass
 
 
@@ -303,7 +313,11 @@ class SetPencil(Instruction):
         self.ID = ID
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
-        ttle.pencolor(self.ID)
+        try: 
+            ttle.pencolor(self.ID)
+        except turtle.TurtleGraphicsError:
+            print(f'RuntimeError: {self.pencil} no es un color aceptado')
+            raise MyError()
 
 
 class If(Instruction):
@@ -493,7 +507,11 @@ class CallRuleInstruction(Instruction):
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         depth = self.expression.evaluate(ttle, context)
-        rule = scope[self.id]
+        try:
+            rule = scope[self.id]
+        except KeyError:
+            print(f'SemanticError: La regla "{self.id}" no está definida en el scope')
+            raise MyError()
         new_context = Context()
         new_context.locals[rule.param] = depth
         rule.evaluate(ttle, new_context, scope)

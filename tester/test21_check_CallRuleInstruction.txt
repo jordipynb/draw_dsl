@@ -14,4 +14,4 @@ shape tree {
         call_rule leandro (4)
     }
 }
-draw tree 0,0
+draw trees 0,0
