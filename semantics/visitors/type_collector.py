@@ -14,8 +14,9 @@ class RuleShapeCollector:
 
     @visitor.when(Scene)
     def visit(self, node: Scene):
-        for draw in node.draws:
-            self.visit(draw)
+        if node.draws:
+            for draw in node.draws:
+                self.visit(draw)
 
     @visitor.when(Draw)
     def visit(self, node: Draw):
@@ -49,7 +50,7 @@ class TypeCollector:
         # new_scope = scope.create_child_scope()
         self.visit(node.shape, scope)
         self.visit(node.x, scope)
-        self.visit(node.y, scope)
+        self.visit(node.y, scope)   
 
     @visitor.when(Shape)
     def visit(self, node: Shape, scope: Scope):

@@ -1,3 +1,4 @@
+from exceptions import ShapeNotDefined
 from ply import yacc as yacc
 from utils import *
 import os
@@ -15,7 +16,7 @@ locals_rules:list[Rule] = []
 draws:list[Draw] = []
 
 def p_scene(p):
-	'''scene : draws_instruction''' # Lista de shapes y draws
+	'''scene : draws_instruction'''
 	p[0] = Scene(draws, errors_list)
 	global shape_scope, locals_rules
 	del shape_scope, locals_rules
@@ -25,7 +26,7 @@ def p_draws_instruction(p):
 	                     | draws_instruction draw
 						 | shape
 						 | draw'''
-	if len(p) == 2: # Si es un shape o un draw, o sea, si no es una lista
+	if len(p) == 2:
 		if p.slice[1].type == 'shape':
 			shape_scope.append(p[1])
 		else:
@@ -42,7 +43,6 @@ def p_draw(p):
 			| DRAW NILL'''
 	if p[2] == 'nill':
 		p[0] = Draw(Nill(), Value(0), Value(0))
-		# return
 	else:
 		id = p[2]
 		for shape in shape_scope:
@@ -55,8 +55,8 @@ def p_draw(p):
 					y = Value(0)
 				p[0] = Draw(shape,x,y)
 				break
-	# token = p.slice[2]
-	# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
+	token = p.slice[2]
+	print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 
 def p_shape(p):
 	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
@@ -65,7 +65,6 @@ def p_shape(p):
 			if shape.name == p[2]:
 				token = p.slice[2]
 				print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
-				return
 	global locals_rules
 	locals_rules = []
 	p[0] = Shape(p[2],p[4],p[5],p[6])
@@ -174,7 +173,7 @@ def p_loop_instruction(p):
 	if p[1] == 'if':
 		if len(p) > 6: p[0] = If(p[2],p[4],p[8])
 		else:  p[0] = If(p[2],p[4])
-	elif p[1] == 'break': p[0] = Break()
+	elif p[1] == 'break': p[0] = Break(p.slice[1])
 	elif p[1] == 'while': p[0] = While(p[2],p[4])
 	else: p[0] = p[1]
 

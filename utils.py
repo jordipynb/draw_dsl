@@ -9,13 +9,18 @@ from lexer import *
 stack: list = []
 lexer = lex.lex()
 
-
-def find_column(t):
-    last_cr = t.lexer.lexdata.rfind('\n', 0, t.lexpos)
+def find_column(token):
+    last_cr = token.lexer.lexdata.rfind('\n', 0, token.lexpos)
     if last_cr < 0:
         last_cr = 0
-    column = (t.lexpos - last_cr)
+    column = (token.lexpos - last_cr)
     return column
+
+def token_info(token: LexToken):
+        value = token.value
+        line = token.lineno
+        column = find_column(token)
+        return value, line, column
 
 
 class Context:
@@ -147,7 +152,7 @@ class Axiom(ContextNode):
 
 
 class Break(Instruction):
-    def __init__(self):
+    def __init__(self, token: LexToken):
         pass
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
