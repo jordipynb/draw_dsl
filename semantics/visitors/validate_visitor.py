@@ -2,6 +2,7 @@ from semantics import visitor
 from semantics.scope import Scope
 from semantics.visitors.type_collector import RuleShapeCollector
 import utils
+import exceptions
 
 
 class ContextValidatorVisitor(object):
@@ -14,12 +15,8 @@ class ContextValidatorVisitor(object):
 
     @property
     def show_errors(self):
-        print('\n'.join(set(self.errors)))
-
-    @property
-    def error(self):
-        if len(self.errors) > 0:
-            return self.errors[0]
+        if self.has_errors:
+            print('\n'.join(set(self.errors)))
 
     @visitor.on('node')
     def visit(self, node):
@@ -131,25 +128,22 @@ class ContextValidatorVisitor(object):
 
     @visitor.when(utils.Break)
     def visit(self, node: utils.Break, scope: Scope):
-        if not scope.inside_loop:
-            self.errors.append("Warning: Break no puede usarse fuera de un ciclo")
-            return False
-        return True
+        current_scope = scope
+        while current_scope:
+            if current_scope.inside_loop:
+                return True
+            current_scope = current_scope.parent
+        self.errors.append(exceptions.BreakException(node.token).warning_message)
+        return False
 
     @visitor.when(utils.CallShapeInstruction)
     def visit(self, node: utils.CallShapeInstruction, scope: Scope):
-        if node.shape:
-            name = node.shape.name
-            if not scope.exist_shape(name):
-                self.errors.append(f"Warning: No existe figura con nombre: {name}")
-                return False
-            return True
-        return False
+        return True
 
     @visitor.when(utils.CallRuleInstruction)
     def visit(self, node: utils.CallRuleInstruction, scope: Scope):
         if not scope.parent.exist_rule(node.id):
-            self.errors.append(f"Warning: No existe la regla con nombre {node.id}")
+            self.errors.append(exceptions.RuleNotDefined(node.token).warning_message)
             return False
         return self.visit(node.expression, scope)
 
@@ -166,7 +160,7 @@ class ContextValidatorVisitor(object):
     @visitor.when(utils.Function)
     def visit(self, node: utils.Function, scope: Scope):
         if not scope.check_fun(node.func, 1):
-            self.errors.append(f"Warning: La función {node.func} no está definida")
+            self.errors.append(exceptions.IdentifierNotDefined(node.token).warning_message)
             return False
         return self.visit(node.expression, scope)
 
@@ -186,6 +180,6 @@ class ContextValidatorVisitor(object):
     def visit(self, node: utils.Factor, scope: Scope):
         value, line, column = scope.token_info(node.ID)
         if not scope.check_var(value):
-            self.errors.append(f'Warning: "{value}" en la línea {line}, columna {column} no está definido')
+            self.errors.append(exceptions.IdentifierNotDefined(node.ID).warning_message)
             return False
         return True
