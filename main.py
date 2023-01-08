@@ -1,17 +1,22 @@
 
 from system import System
+import sys
 
 system = System()
-system.run_tester("test1")
-# system.run_tester("test2")
-# system.run_tester("test3")
-# system.run_tester("test4")
-# system.run_tester("test5")
-# system.run_tester("test6")
-# system.run_tester("test15")
-# system.run_tester("test16")
-# system.run_tester("test17")
-# system.run_tester("test18")
-# system.run_tester("test19sem")
-# system.run_tester("test20_check_PencilColor")
-# system.run_tester("test21_check_CallRuleInstruction")
+
+def main(args = []):
+    len_args = len(args)
+    if len_args == 1:
+        system.show_help()
+    elif len_args == 2:
+        command = args[1]
+        system.run_command(command)
+    elif len_args == 3:
+        command = args[1]
+        tester = args[2]
+        system.run_command(command, tester)
+    
+if __name__ == "__main__":
+    main(sys.argv)
+    pass
+    

@@ -49,3 +49,10 @@ class BreakException(SemanticException):
         value, line, column = token_info(token)
         msg = f"'break' instruction in line {line} and column {column} must be defined inside a loop"
         super().__init__(msg)
+        
+class CommandNotDefined(Exception):
+    def __init__(self, command:str) -> None:
+        self.command = command
+    
+    def __str__(self) -> str:
+        return f"Command '{self.command}' is not defined"
