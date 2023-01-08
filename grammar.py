@@ -1,4 +1,4 @@
-from exceptions import RuleNotDefined, ShapeNotDefined
+from exceptions import EmptyError, RuleNotDefined, ShapeNotDefined
 from ply import yacc as yacc
 from utils import *
 import os
@@ -104,6 +104,7 @@ def p_rule(p):
 		if rule.name == p[2]:
 			token = p.slice[2]
 			print(RuleNotDefined(token))
+			raise EmptyError("")
 			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una regla')
 			# return
 	p[0] = Rule(p[2], p[4], p[7], p.slice[2])
@@ -163,6 +164,7 @@ def p_instruction_base(p):
 		else:
 			token = p.slice[2]
 			print(ShapeNotDefined(token))
+			raise EmptyError()
 			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 	elif p[1] == 'set_x': p[0] = SetX(p[2])
 	elif p[1] == 'set_y': p[0] = SetY(p[2])

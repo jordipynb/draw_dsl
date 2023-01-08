@@ -1,27 +1,17 @@
-from grammar import *
-from semantics.core import check_semantics
 
-# input = open(f"tester/test0.txt").read() # DONE
-# input = open(f"tester/test1.txt").read() # DONE
-# input = open(f"tester/test2.txt").read() # DONE
-# input = open(f"tester/test3.txt").read() # DONE
-# input = open(f"tester/test4.txt").read() # DONE
-# input = open(f"tester/test5.txt").read() # DONE
-# input = open(f"tester/test6.txt").read() # DONE
+from system import System
 
-
-
-# input = open(f"tester/test15.txt").read() # DONE
-# input = open(f"tester/test16.txt").read() # DONE
-# input = open(f"tester/test17.txt").read() # DONE
-input = open(f"tester/test18.txt").read() # DONE
-# input = open(f"tester/test19sem.txt").read() # DONE
-# input = open(f"tester/test20_check_PencilColor.txt").read() # DONE    #####LELE EN ESTE TESTER PINTA UN ESPACIO EN BALNCO Y CREO Q ES DEL VISITOR
-# input = open(f"tester/test21_check_CallRuleInstruction.txt").read() # DONE
-
-
-ast:Scene = parser.parse(input,lexer=lexer)
-if not ast:
-	raise RuntimeError("AST Incomplete")
-check_semantics(ast)
-ast.evaluate()
+system = System()
+system.run_tester("test1")
+# system.run_tester("test2")
+# system.run_tester("test3")
+# system.run_tester("test4")
+# system.run_tester("test5")
+# system.run_tester("test6")
+# system.run_tester("test15")
+# system.run_tester("test16")
+# system.run_tester("test17")
+# system.run_tester("test18")
+# system.run_tester("test19sem")
+# system.run_tester("test20_check_PencilColor")
+# system.run_tester("test21_check_CallRuleInstruction")
