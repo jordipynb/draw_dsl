@@ -4,6 +4,8 @@ from grammar import *
 from semantics.core import check_semantics
 import os
 
+from semantics.visitors.evaluator_visitor import EvalVisitor
+
 class System:
     def __init__(self) -> None:
         self.testers = self.get_avaliable_testers()
@@ -84,4 +86,5 @@ class System:
         if not ast:
             raise RuntimeError("AST Incomplete")
         if check_semantics(ast):
-            ast.evaluate()
+            EvalVisitor().visit(ast)
+            # ast.evaluate()
