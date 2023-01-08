@@ -2,29 +2,10 @@ import turtle
 import _tkinter
 import exceptions
 from ply.lex import LexToken
-from lexer import *
-
 from semantics import visitor
 from utils import *
 
 stack: list = []
-lexer = lex.lex()
-
-
-def find_column(token):
-    last_cr = token.lexer.lexdata.rfind('\n', 0, token.lexpos)
-    if last_cr < 0:
-        last_cr = 0
-    column = (token.lexpos - last_cr)
-    return column
-
-
-def token_info(token: LexToken):
-    value = token.value
-    line = token.lineno
-    column = find_column(token)
-    return value, line, column
-
 
 class Context:
     def __init__(self, parent=None):
@@ -126,7 +107,7 @@ class EvalVisitor:
         ttle.hideturtle()
         
     @visitor.when(Scene)
-    def visit(self, node: Scene, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
+    def visit(self, node: Scene, ttle: turtle.Turtle = None, context: Context = None, scope: dict = None):
         try:
             for draw in node.draws:
                 self.visit(draw, ttle)
