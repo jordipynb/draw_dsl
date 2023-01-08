@@ -1,5 +1,5 @@
 import abc
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import enum
 import turtle
 import _tkinter
@@ -10,6 +10,7 @@ from lexer import *
 stack: list = []
 lexer = lex.lex()
 
+
 def find_column(token):
     last_cr = token.lexer.lexdata.rfind('\n', 0, token.lexpos)
     if last_cr < 0:
@@ -19,16 +20,16 @@ def find_column(token):
 
 
 def token_info(token: LexToken):
-        value = token.value
-        line = token.lineno
-        column = find_column(token)
-        return value, line, column
+    value = token.value
+    line = token.lineno
+    column = find_column(token)
+    return value, line, column
 
 
 class Context:
     def __init__(self, parent=None):
         self.locals = {}
-        self.parent:Context = parent
+        self.parent: Context = parent
 
     def create_children(self):
         return Context(self)
@@ -70,20 +71,20 @@ class Expression(ContextNode):
     pass
 
 
+@dataclass
 class Rule(ContextNode):
-    def __init__(self, name: str, param: str, instructions: list[Instruction]):
-        self.name = name
-        self.instructions = instructions
-        self.param = param
+    name: str
+    param: str
+    instructions: list[Instruction]
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         for elem in self.instructions:
             elem.evaluate(ttle, context, scope)
 
 
+@dataclass
 class Axiom(ContextNode):
-    def __init__(self, instructions: list[ContextNode]):
-        self.instructions = instructions
+    instructions: list[Instruction]
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         context = Context()
@@ -91,15 +92,16 @@ class Axiom(ContextNode):
             elem.evaluate(ttle, context, scope)
 
 
+@dataclass
 class Factor(Expression):
-    def __init__(self, ID):
-        self.ID = ID
+    ID: LexToken
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return context.search(self.ID)
 
 
 class Value(Factor):
+    # value: float
     def __init__(self, value):
         self.value = value
 
@@ -107,51 +109,53 @@ class Value(Factor):
         return self.value
 
 
+@dataclass
 class Shape(ContextNode):
-    def __init__(self, name: str, pencil: str, rules: list[Rule], axiom: Axiom):
+    name: str
+    pencil: str
+    rules: list[Rule]
+    axiom: Axiom
+    stack: list = field(init=False)
+    scope: dict = field(init=False)
+
+    def __post_init__(self):
         self.stack = []
-        self.name = name
-        self.pencil = pencil
-        self.axiom = axiom
         self.scope = {}
-        self.rules = rules
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         if self.rules:
             for rule in self.rules:
                 self.scope[rule.name] = rule
-        try: 
+        try:
             ttle.pencolor(self.pencil)
         except turtle.TurtleGraphicsError:
-            
+
             print(exceptions.ColorNotDefined(self.pencil).runtime_error)
             raise exceptions.EmptyError()
         self.axiom.evaluate(ttle, scope=self.scope)
 
 
+@dataclass
 class Nill(ContextNode):
-    def __init__(self):
-        pass
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         pass
 
 
+@dataclass
 class Rule(ContextNode):
-    def __init__(self, name: str, param: str, instructions: list[Instruction], token: LexToken=None):
-        self.name = name
-        self.instructions = instructions
-        self.param = param
-        self.token = token
+    name: str
+    param: str
+    instructions: list[Instruction]
+    token: LexToken = None
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         for elem in self.instructions:
             elem.evaluate(ttle, context, scope)
 
 
+@dataclass
 class Axiom(ContextNode):
-    def __init__(self, instructions: list[ContextNode]):
-        self.instructions = instructions
+    instructions: list[Instruction]
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         context = Context()
@@ -159,19 +163,19 @@ class Axiom(ContextNode):
             elem.evaluate(ttle, context, scope)
 
 
+@dataclass
 class Break(Instruction):
-    def __init__(self, token: LexToken):
-        self.token = token
+    token: LexToken
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self
 
 
+@dataclass
 class Draw(Node):
-    def __init__(self, shape: Shape, x: Value, y: Value):
-        self.shape = shape
-        self.x = x
-        self.y = y
+    shape: Shape
+    x: Value
+    y: Value
 
     def evaluate(self):
         ttle = turtle.Turtle()
@@ -189,9 +193,9 @@ class Draw(Node):
         ttle.hideturtle()
 
 
+@dataclass
 class Scene(Node):
-    def __init__(self, draws: list[Draw]):
-        self.draws = draws
+    draws: list[Draw]
 
     def evaluate(self):
         try:
@@ -206,44 +210,42 @@ class Scene(Node):
             pass
 
 
+@dataclass
 class LeftInstruction(Instruction):
-    def __init__(self, expression: Expression):
-        self.expression = expression
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         angle = self.expression.evaluate(ttle, context, scope)
         ttle.left(angle)
 
 
+@dataclass
 class RightInstruction(Instruction):
-    def __init__(self, expression: Expression):
-        self.expression = expression
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         angle = self.expression.evaluate(ttle, context, scope)
         ttle.right(angle)
 
 
+@dataclass
 class LineInstruction(Instruction):
-    def __init__(self, expression: Expression):
-        self.expression = expression
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         distance = self.expression.evaluate(ttle, context, scope)
         ttle.forward(distance)
 
 
+@dataclass
 class PushInstruction(Instruction):
-    def __init__(self):
-        pass
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         stack.append((ttle.xcor(), ttle.ycor(), ttle.heading()))
 
 
+@dataclass
 class PopInstruction(Instruction):
-    def __init__(self):
-        pass
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict = None):
         pos_x, pos_y, angle = stack.pop()
@@ -253,10 +255,10 @@ class PopInstruction(Instruction):
         ttle.down()
 
 
+@dataclass
 class JumpInstruction(Instruction):
-    def __init__(self, exp1: Expression, exp2: Expression):
-        self.x = exp1
-        self.y = exp2
+    exp1: Expression
+    exp2: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         ttle.up()
@@ -266,10 +268,10 @@ class JumpInstruction(Instruction):
         ttle.down()
 
 
+@dataclass
 class Assign(Instruction):
-    def __init__(self, ID, expression: ContextNode):
-        self.ID = ID
-        self.expression = expression
+    ID: str
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         name = self.ID
@@ -278,17 +280,17 @@ class Assign(Instruction):
             context.locals[name] = value
 
 
+@dataclass
 class SetX(Instruction):
-    def __init__(self, expression: Expression):
-        self.expression = expression
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         ttle.setx(self.expression.evaluate(ttle, context, scope))
 
 
+@dataclass
 class SetY(Instruction):
-    def __init__(self, expression: ContextNode):
-        self.expression = expression
+    expression: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         ttle.sety(self.expression.evaluate(ttle, context, scope))
@@ -321,18 +323,18 @@ class SetPencil(Instruction):
         self.ID = ID
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
-        try: 
+        try:
             ttle.pencolor(self.ID)
         except turtle.TurtleGraphicsError:
             print(exceptions.ColorNotDefined(self.pencil).runtime_error)
             raise exceptions.EmptyError()
 
 
+@dataclass
 class If(Instruction):
-    def __init__(self, condition: Expression, if_body: list[Instruction], else_body: list[Instruction] = None):
-        self.condition = condition
-        self.if_body = if_body
-        self.else_body = else_body
+    condition: Expression
+    if_body: list[Instruction]
+    else_body: list[Instruction] = None
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         context = context.create_children()
@@ -348,10 +350,10 @@ class If(Instruction):
                     return result
 
 
+@dataclass
 class While(Instruction):
-    def __init__(self, condition: ContextNode, body: list[ContextNode]):
-        self.condition = condition
-        self.body = body
+    condition: Expression
+    body: list[Instruction]
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         context = context.create_children()
@@ -375,19 +377,15 @@ class Operator(enum.Enum):
     EqualEqual: enum.auto()
 
 
-class Expression(ContextNode):
-    def __init__(self) -> None:
-        super().__init__()
-
-
+@dataclass
 class BinaryExpr(Expression):
-    def __init__(self, left: Expression, right: Expression, operator: Operator = None) -> None:
-        self.operator = operator
-        self.left = left
-        self.right = right
+    left: Expression
+    right: Expression
+    operator: Operator = None
 
 
 class TrueCondition(Factor):
+
     def __init__(self):
         pass
 
@@ -404,116 +402,94 @@ class FalseCondition(Factor):
 
 
 class AndCondition(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) and self.right.evaluate(ttle, context, scope)
 
 
 class OrCondition(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) or self.right.evaluate(ttle, context, scope)
 
 
+@dataclass
 class NotCondition(Expression):
-    def __init__(self, expr: Expression):
-        self.expr = expr
+    expr: Expression
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return not self.expr.evaluate(ttle, context, scope)
 
 
 class GreaterCondition(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) > self.right.evaluate(ttle, context, scope)
 
 
 class MenorCondition(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) < self.right.evaluate(ttle, context, scope)
 
 
 class EqualCondition(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) == self.right.evaluate(ttle, context, scope)
 
 
 class SumExpr(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) + self.right.evaluate(ttle, context, scope)
 
 
 class SubExpr(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
-
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) - self.right.evaluate(ttle, context, scope)
 
 
 class MultExpr(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) * self.right.evaluate(ttle, context, scope)
 
 
 class DivExpr(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.left.evaluate(ttle, context, scope) / self.right.evaluate(ttle, context, scope)
 
 
 class PowExpr(BinaryExpr):
-    def __init__(self, left: Expression, right: Expression):
-        super().__init__(left, right)
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return math.pow(self.left.evaluate(ttle, context, scope), self.right.evaluate(ttle, context, scope))
 
 
+@dataclass
 class Function(Instruction):
-    def __init__(self, func, expression: Expression, token: LexToken):
-        self.expression = expression
-        self.func = func
-        self.token = token
+    func: str
+    expression: Expression
+    token: LexToken
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         return self.func(self.expression.evaluate(ttle, context, scope))
 
 
+@dataclass
 class CallShapeInstruction(Instruction):
-    def __init__(self, shape: Shape):
-        self.shape = shape
+    shape: Shape
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         self.shape.evaluate(ttle)
 
 
+@dataclass
 class CallRuleInstruction(Instruction):
-    def __init__(self, token: LexToken, expression: Expression):
-        self.id = token.value
-        self.expression = expression
-        self.token = token
+    token: LexToken
+    expression: Expression
+    id: str = field(init=False)
+
+    def __post_init__(self):
+        self.id = self.token.value
 
     def evaluate(self, ttle: turtle.Turtle, context: Context = None, scope: dict[str, Rule] = None):
         depth = self.expression.evaluate(ttle, context)
