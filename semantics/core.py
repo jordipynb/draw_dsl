@@ -1,5 +1,5 @@
 from semantics.visitors.validate_visitor import ContextValidatorVisitor
-import exceptions
+
 def check_semantics(ast):
     visitor = ContextValidatorVisitor()
     visitor.visit(ast)

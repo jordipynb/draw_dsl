@@ -15,8 +15,7 @@ class Scope:
         self.local_vars = []
         self.local_shapes = []
         self.local_funcs = {}
-        self.inside_loop = False
-        
+        self.inside_loop = False  
 
     def create_child_scope(self):
         child_scope = Scope(self)

@@ -1,5 +1,6 @@
 from ply import lex as lex
 import math
+
 # List of token names.   This is always required
 reserved = {
     'shape'      : 'SHAPE',

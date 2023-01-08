@@ -15,7 +15,6 @@ locals_rules:list[Rule] = []
 draws:list[Draw] = []
 
 def p_scene(p):
-
 	'''scene : draws_instruction'''
 	p[0] = Scene(draws)
 	global shape_scope, locals_rules
@@ -31,7 +30,7 @@ def p_draws_instruction(p):
 			shape_scope.append(p[1])
 		else:
 			draws.append(p[1])
-	else: # Si es una lista
+	else:
 		if p.slice[2].type == 'shape':
 			shape_scope.append(p[2])
 		else:
@@ -59,8 +58,6 @@ def p_draw(p):
 			token = p.slice[2]
 			p[0] = Draw(token,Value(0),Value(0))
 			print(ShapeNotDefined(token).warning_message)
-			# print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
-
 
 def p_shape(p):
 	'''shape : SHAPE ID O_KEY pencil rules_locals axiom C_KEY'''
@@ -69,7 +66,6 @@ def p_shape(p):
 			if shape.name == p[2]:
 				token = p.slice[2]
 				print(ShapeNotDefined(token).warning_message)
-				# print(f'Warning: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una figura')
 				p[0] = Shape(None,p[4],p[5],p[6])
 				return
 	global locals_rules
@@ -105,8 +101,6 @@ def p_rule(p):
 			token = p.slice[2]
 			print(RuleNotDefined(token))
 			raise EmptyError("")
-			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} ya es una regla')
-			# return
 	p[0] = Rule(p[2], p[4], p[7], p.slice[2])
 	locals_rules.append(p[0])
 
@@ -165,7 +159,6 @@ def p_instruction_base(p):
 			token = p.slice[2]
 			print(ShapeNotDefined(token))
 			raise EmptyError()
-			# print(f'SemanticError: "{token.value}" en la línea {token.lineno}, columna {find_column(token)} no es una figura definida')
 	elif p[1] == 'set_x': p[0] = SetX(p[2])
 	elif p[1] == 'set_y': p[0] = SetY(p[2])
 	elif p[1] == 'set_pencil': p[0] = SetPencil(p[2])
@@ -283,17 +276,5 @@ def p_error(p):
 		parser.errok()
 	else:
 		print("Unexpected end of input")
-
-
-
-# SE REPORTA LOS ERRORES EN COMPILACION YA EN RUNTIME SE DA EXCEPCIONES
-# COMPROBAR Q LOS ID DE FILL Y PENCIL SON COLORES, TAMBIEN ACEPTAR HEXADECIMALES CON EXPRESIONES REGULARES
-# CHEKEAR LA GRAMATICA EN GRAN MEDIDA HASTA PARTIRLA O ENCONTRAR UNA SECUENCIA Q LA GENERA Y NO DEBA
-# HACER EL FLUJO DEL CODIGO --
-#                            |
-#   INPUT -> COMANDO DE PARADA DE ESCRITURA -> MOSTRAR SECUENCImmmmnmnA DE ERRORES ORDENADAS Y PREGUNTAR SI ESTA SEGURO DE RUNEAR EL CODE
-#   YES -> EVALUAR EL AST A PESAR DE LOS ERRORES (SI DEJA, CUANDO ENCONTRAMOS NONE LANZAR ERRORES SEMANTICOS POR ORDEN), SINO DEJA 
-#          ES XQ HUBO ERRORES DE SYNTAXIS Y EL LOS LANZA SOLO
-#   NO  -> CONTINUAR CON EL INPUT HASTA Q VUELVA A PONER COMANDO DE PARADA
-#   SI HAY ERRORES RUNTIME NO ES NUESTRO PROBLEMA PERO PODRIAMOS PONERLOS NOSOTROS POR SI JODE LA PINTURA                          
+                       
 parser = yacc.yacc(outputdir='./parser/')

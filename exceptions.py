@@ -29,20 +29,17 @@ class IdentifierNotDefined(SemanticException):
         msg = f"Identifier '{value}' in line '{line}' and column '{column}' isn't defined"
         super().__init__(msg)
 
-
 class ShapeNotDefined(SemanticException):
     def __init__(self, token: LexToken) -> None:
         value, line, column = token_info(token)
         msg = f"Shape '{value}' in line '{line}' and column '{column}' isn't defined"
         super().__init__(msg)
 
-
 class RuleNotDefined(SemanticException):
     def __init__(self, token: LexToken) -> None:
         value, line, column = token_info(token)
         msg = f"Rule '{value}' in line '{line}' and column '{column}' isn't defined"
         super().__init__(msg)
-
 
 class BreakException(SemanticException):
     def __init__(self, token: LexToken) -> None:

@@ -3,7 +3,6 @@ from exceptions import CommandNotDefined
 from grammar import *
 from semantics.core import check_semantics
 import os
-
 from semantics.visitors.evaluator_visitor import EvalVisitor
 
 class System:
@@ -87,4 +86,3 @@ class System:
             raise RuntimeError("AST Incomplete")
         if check_semantics(ast):
             EvalVisitor().visit(ast)
-            # ast.evaluate()
