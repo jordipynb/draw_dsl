@@ -85,6 +85,6 @@ class System:
         if not ast:
             raise RuntimeError("AST Incomplete")
         check_semantics(ast)
-        print("> are you sure you want to run it? (Y/N)")
+        print("> are you sure to run it? (Y/N)")
         if input() == 'Y':
             EvalVisitor().visit(ast)
