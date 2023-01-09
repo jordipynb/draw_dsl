@@ -5,5 +5,3 @@ def check_semantics(ast):
     visitor.visit(ast)
     if visitor.has_errors:
         visitor.show_errors
-        return False
-    return True

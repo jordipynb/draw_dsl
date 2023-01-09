@@ -80,9 +80,11 @@ class System:
         input = open(f"tester/{tester_name}.txt").read()
         self.run(input)
         
-    def run(self, input):
-        ast:Scene = parser.parse(input,lexer=lexer)
+    def run(self, _input):
+        ast:Scene = parser.parse(_input,lexer=lexer)
         if not ast:
             raise RuntimeError("AST Incomplete")
-        if check_semantics(ast):
+        check_semantics(ast)
+        print("> are you sure you want to run it? (Y/N)")
+        if input() == 'Y':
             EvalVisitor().visit(ast)
