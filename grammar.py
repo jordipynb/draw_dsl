@@ -272,7 +272,7 @@ def p_error(p):
 			token = f"keyword '{p.value}' at line {p.lineno}, column {find_column(p)}"
 		else:
 			token = f"'{p.value}' at line {p.lineno}, column {find_column(p)}"
-		print(f"SyntaxError: Unexpected {token}")
+		print(f"Syntax Error: Unexpected {token}")
 		parser.errok()
 	else:
 		print("Unexpected end of input")

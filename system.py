@@ -83,7 +83,8 @@ class System:
     def run(self, _input):
         ast:Scene = parser.parse(_input,lexer=lexer)
         if not ast:
-            raise RuntimeError("AST Incomplete")
+            print('Runtime Error: ast incomplete')
+            return 
         check_semantics(ast)
         print("> are you sure to run it? (Y/N)")
         if input() == 'Y':
