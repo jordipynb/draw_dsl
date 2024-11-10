@@ -1,45 +1,54 @@
-# Proyecto de Compilación
-### Integrantes:
-* Dianelys Cruz Mengana C-311
-* Jordan Pla González C-311
-* Leandro Hernández Nuñez C-312
+# DRAW: A DSL for Fractals and Pattern-Based Graphics
 
-### Acerca de DRAW
-El objetivo del DSL implementado es proveer un lenguaje que permita diseñar y dibujar figuras planas, en particular figuras que siguen determinados patrones, como es el caso de los fractales, y en su caso especial, los árboles.  
-Para definir figuras es necesario especificar su identificador <nombre> y el color que se usará para dibujarla (en caso de no definirse, se dibuja con el color: negro). La definición de una figura se divide en dos secciones: Conjunto de Reglas (opcionales) y Axioma (el cuerpo de ejecución de la figura desde la cual se puede acceder a las reglas). Ambas secciones pueden contener instrucciones que incluyen el llamado a reglas (que estén definidas en el contexto de la figura, permitiendo recursividad) u otras figuras creadas con anterioridad:  
-- [x] left \<expression>: cambia la dirección del cursor hacia la izquierda, la cantidad de grados resultantes de evaluar **expression**.
-- [x] right \<expression>: análoga a la instrucción anterior.
-- [x] line \<expression>: dibuja una línea con la longitud resultante de evaluar **expression**.
-- [x] jump \<expression1>,\<expression2>: cambia las coordenadas del cursor a (**expression1**,**expression2**).
-- [x] push: guarda las coordenadas actuales en una pila. 
-- [x] pop: devuele el cursor a las coordenadas que están en el tope de la pila.
-- [x] call_shape \<shape_name>: pinta la figura especificada en **shape_name** (debe estar definida con anterioridad).
-- [x] call_rule \<rule_name> (expression): ejecuta la regla especificada en **rule** del cuerpo de la figura donde se esta invocando con el argumento resultante de evaluar **expression**.
-- [x] \<variable> = <expression>: asigna el resultado de evaluar **expression** a una **variable**. 
-- [x] \<variable> = get_x: asigna a una variable el valor de las coordenadas actuales en **x**.
-- [x] \<variable> = get_y: análoga a la instrucción anterior.
-- [x] set_x \<expression>: cambia las coordenadas actuales de **x** por el resultado de evaluar **expression**.
-- [x] set_y \<expression>: análoga a la instrucción anterior.
+## Description
+The goal of the implemented DSL (Domain-Specific Language) is to provide a language that allows for the design and drawing of flat figures, particularly figures that follow specific patterns, such as fractals, with a special focus on trees. This project is developed as part of the Compilation course and is designed to facilitate the creation of graphics through a set of rules and axioms.
 
-> En cuanto a las características de la gramática, podemos afirmar que la gramática no es ambigua, por lo que no fue necesario usar ninguna herramienta del generador de compiladores YACC para desambiguarla: como la utilización de la precedencia y restricciones de asociatividad. Dicha afirmación se puede comprobar ya que en el output del generador se puede percibir que para cada cadena válida se tiene una única derivación a la izquierda. Se tiene una gramática libre del contexto donde cada regla de producción es de la forma:    
-> <p align="center"> V → w </p>    
-> donde V es un no terminal y w es una cadena de terminales y/o no terminales. En el caso de este problema, dicha gramática tiene una naturaleza decidible habiendo encontrado un algoritmo de decisión u analizador para resolverlo (LALR).
+### Authors
+* **Dianelys Cruz Mengana** (C-311)
+* **Jordan Pla González** (C-311)
+* **Leandro Hernández Nuñez** (C-312)
 
-### Arquitectura del Compilador
-* Lexer: para la realización del lexer se utilizó la librería ```ply``` por la facilidad que aportaba para su uso.
-* Parser: igual que con el lexer se utilizó el proporcionado por la librería ```ply``` por la eficiencia del parser LALR en este caso.
-* AST: para la construcción del ast se creó una jerarquía de clases que se puede encontrar en el script ```utils.py``` haciendo uso de estos nodos en las reglas y/o producciones de la gramática establecida.
-* Semantic: para analizar la semántica del ast nos apoyamos en el patron visitor, realizamos un visitor para coleccionar tipos y otro para validar contextos, los mismos se pueden encontrar en el directorio ```semantics.visitors```.
-* Interpreter: Para el intérprete de árbol nos apoyamos en la jerarquía de clases de python con la que se define el ast.
+## Language Features
+To define figures, it is necessary to specify their identifier `<name>` and the color that will be used to draw them (if not defined, they are drawn in black). The definition of a figure is divided into two sections:
 
-> Nuestro intérprete esta formado por una jerarquía de clases. La clase principal es Scene, que posee un conjunto de subclases de tipo draw, la cual tiene un shape, dicho shape posee un conjunto de rules (opcionales y equivalente a funciones, pero con un solo parámetro, en un lenguaje de propósito general) y además tiene un axiom que realiza el papel del main en dicho shape.
+- **Set of Rules (optional)**: Instructions that allow for recursion and the creation of figures.
+- **Axiom**: The execution body of the figure from which rules can be accessed.
 
-### Instalar los paquetes necesarios
-```zsh
+### Language Instructions
+- `left <expression>`: Changes the cursor's direction to the left.
+- `right <expression>`: Changes the cursor's direction to the right.
+- `line <expression>`: Draws a line with the resulting length.
+- `jump <expression1>,<expression2>`: Changes the cursor's coordinates to (**expression1**, **expression2**).
+- `push`: Saves the current coordinates onto a stack.
+- `pop`: Returns the cursor to the coordinates at the top of the stack.
+- `call_shape <shape_name>`: Draws the specified shape in **shape_name**.
+- `call_rule <rule_name> (expression)`: Executes the specified rule.
+- `<variable> = <expression>`: Assigns the result to a variable.
+- `<variable> = get_x`: Assigns the current x-coordinate to a variable.
+- `<variable> = get_y`: Assigns the current y-coordinate to a variable.
+- `set_x <expression>`: Changes the current x-coordinate.
+- `set_y <expression>`: Changes the current y-coordinate.
+
+> The grammar used is unambiguous, allowing for a unique left derivation for each valid string. An LALR algorithm has been used to resolve it.
+
+## Compiler Architecture
+* **Lexer**: The lexer is implemented using the `ply` library for ease of use.
+* **Parser**: Similarly, it uses `ply`, leveraging its efficiency with LALR parsers.
+* **AST**: An abstract syntax tree is constructed using a hierarchy of classes found in `utils.py`.
+* **Semantic Analysis**: The semantic analysis utilizes the visitor pattern to validate contexts and collect types, located in the `semantics.visitors` directory.
+* **Interpreter**: The interpreter relies on Python's class hierarchy that defines the AST.
+
+## Installation
+To install the required packages, run:
+```bash
 pip install -r requirements.txt
 ```
 
-### Ejecutar el proyecto
-```
+## Running the Project
+To execute the project, use:
+```bash
 python main.py
 ```
+
+## Conclusion
+This project provides a DSL for creating complex graphic figures through a rule-based system. It allows users to explore concepts such as fractals and trees through graphic programming.
